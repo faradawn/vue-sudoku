@@ -1,6 +1,10 @@
 <template>
-    <h1>数独棋盘</h1>
-    <button @click="createEasy">简单</button>
+    <h2>数独棋盘</h2>
+    <div class="button-line">
+      <button class="button" @click="createEasy">简单</button>
+      <button class="button" @click="createEasy">普通</button>
+      <button class="button" @click="createEasy">困难</button>
+    </div>
 
     <div 
       class='line'
@@ -81,6 +85,14 @@ export default {
 </script>
 
 <style scoped>
+.button-line{
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 30px;
+}
+.button{
+  margin-right: 10px;
+}
 .line {
   width: 18rem;
   display: flex;
