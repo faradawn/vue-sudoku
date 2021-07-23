@@ -1,14 +1,13 @@
 <template>
   <div>
-    Hello from App.vue
-    <h1 class='myh1'> hi H1</h1>
-    <p class='para'> hello </p>
-    <h1> bad </h1>
+    <Board/>
   </div>
 </template>
 
 <script>
-export default {
+import Board from './components/Board.vue'
 
+export default {
+  components:{ Board },
 } 
 </script>

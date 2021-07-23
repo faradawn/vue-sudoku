@@ -40,7 +40,7 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, './index.html'),
       filename: 'index.html',
-      title: 'Vue Sudoku' 
+      title: '面包数独' 
     }),
     new VueLoaderPlugin(),
     new CleanWebpackPlugin(),
