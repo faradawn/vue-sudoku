@@ -1,13 +1,8 @@
-/**
- * 抽签法
- * @param {array} arr
- * @returns {array} 
- */
+// 1 抽取存储法
 function shuffleDraw(arr){
   let newArr = [];
   let len = arr.length;
-  let i;
-  for(i = 0; i < len; i++){
+  for(let i = 0; i < len; i++){
     let index = Math.floor(Math.random()*(arr.length-1));
     newArr.push(arr[index]);
     arr[index] = arr[arr.length-1];
@@ -16,11 +11,7 @@ function shuffleDraw(arr){
   return(newArr);
 }
 
-/**
- * 交换法
- * @param {array} arr 
- * @returns {array}
- */
+// 2 两边对调法
 function shuffleSwitch(arr){
   let i;
   let half = Math.ceil(arr.length/2);
@@ -34,25 +25,31 @@ function shuffleSwitch(arr){
   return arr;
 }
 
-/**
- * 数组法
- * @param {number} a Start index
- * @param {number} b End index
- * @returns {array}
- */
+// 3 Fisher-Yates Shuffle
+function shuffleFisher(arr){
+  let i = -1;
+  while(++i < arr.legth){
+    let r = Math.floor(Math.random()*(arr.length-i+1));
+    let temp = arr[i];
+    arr[i] = arr[r];
+    arr[r] = temp;
+  }
+  return arr;
+}
+
+// 4 数组法
 function randomArr(a, b){
   let outArr = [];
-  let i;
-  for(i = 0; i < b-a+1; i++){
-    let rand = Math.floor(Math.random()*(b-a+1)+a);
-    while(outArr.find((val) => val===rand)){
-      rand = Math.floor(Math.random()*(b-a+1)+a);
+  while(outArr.length < b-a+1){
+    let rand = Math.floor(Math.random()*(b-a+1) + a);
+    if(outArr.indexOf(rand) === -1){
+      outArr.push(rand);
     }
-    outArr.push(rand);
   }
   return outArr;
 }
 
+// 5 哈希法
 function randomHash(a, b){
   let i, outArr = [], hash = {};
   for(i = 0; i < b-a+1; i++){
@@ -75,12 +72,10 @@ function arrGen(b){
   return arr;
 }
 
-
-
-
 // ===== 执行部分 ======
-// console.log(shuffleDraw(arrGen(10000)));
-randomArr(1,10000)
+
+
+
 
 
 
@@ -88,14 +83,15 @@ randomArr(1,10000)
 // ===== 笔记 =====
 /*
   100000000 (一亿) (2.37s)
+    shuffleFisher 洗牌法 10.51s，（把len存起来 10.87s)
     shuffleDraw 抽签法 13.11s
-    shuffleSwitch 交换法 13.27s，（把input array len存起来 14.07s）
+    shuffleSwitch 交换法 13.27s，（存起来 14.07s）
     randomHash 哈希法 (heap out of memory) 43s
     randomArr 数组法 (跑不出来) 70s
-
   10000 (一万) (0.06s)
     shuffleDraw 抽签法 0.057s
     shuffleSwitch 交换法 0.065s
-    randomArr 数组法: (find 1.10s，indexOf 0.95s)
+    shuffleFisher 洗牌法 0.064s
+    randomArr 数组法: (find 1.10s，indexOf 0.95s, while 0.651)
     hashArr 哈希法 0.066s
 */
