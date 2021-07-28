@@ -27,12 +27,10 @@ function shuffleSwitch(arr){
 
 // 3 Fisher-Yates Shuffle
 function shuffleFisher(arr){
-  let i = -1;
-  while(++i < arr.legth){
-    let r = Math.floor(Math.random()*(arr.length-i+1));
-    let temp = arr[i];
-    arr[i] = arr[r];
-    arr[r] = temp;
+  let i = arr.length;
+  while(++i < arr.length){
+    let r = Math.floor(Math.random() * i--);
+    [arr[i], arr[r]] = [arr[r], arr[i]];
   }
   return arr;
 }
@@ -71,6 +69,15 @@ function arrGen(b){
   }
   return arr;
 }
+
+/**
+ * 生成随机的九个数数组
+ * @returns {[number]} 数组
+ */
+export function generateNine(){
+  return shuffleDraw(arrGen(9));
+}
+
 
 // ===== 执行部分 ======
 

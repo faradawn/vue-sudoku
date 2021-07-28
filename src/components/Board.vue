@@ -29,45 +29,33 @@
 </template>
 
 <script>
+import { fillFirstThree } from '../utils/fillFirstThree.js';
 
 export default {
   data(){
     return{
       myWidth: window.innerWidth,
-      matrix: [
-        [,,,,,,,,,],
-        [,,,,,,,,,],
-        [,,,,,,,,,],
-        [,,,,,,,,,],
-        [,,,,,,,,,],
-        [,,,,,,,,,],
-        [,,,,,,,,,],
-        [,,,,,,,,,],
-        [,,,,,,,,,],
-      ]
+      matrix: [[]],
     }
+  },
+  mounted(){
+    this.emptyBoard();
+
   },
   methods: {
     emptyBoard(){
-      var board = [[]];
-      var i, j;
-      for(i = 0; i<8; i++){
-        for(j = 0; j<8; j++){
-          board[i][j] = ' ';
+      var board = Array.from(Array(9), () => new Array(9));
+      for(let i = 0; i<9; i++){
+        for(let j = 0; j<9; j++){
+          board[i][j] = '';
         }
       }
-      return board;
+      this.matrix = board;
     },
     createEasy(){
-      var board = Array.from(Array(9), () => new Array(9));
-      var i, j;
-      for(i = 0; i < 9; i++){
-        for(j = 0; j < 9; j++){
-          board[i][j] = 0;
-        }
-      }
+      let matrix = fillFirstThree(this.matrix);
 
-      this.matrix = board;
+      this.matrix = matrix;
     },
     resize(){
       this.myWidth = window.innerWidth;
