@@ -1,49 +1,37 @@
 import { checkValid } from './checkValid.js';
 import { fillFirstThree } from './fillFirstThree.js';
 
+main();
 
-main()
 function main(){
-  var board = fillFirstThree(createEmpty());
+  var board = createEmpty();
+  fillFirstThree(board);
   fillRest(board);
 
 }
 
-// 为什么 deepcopy 只有第一次能用？
 function fillRest(a){
   var counter = 0;
-
   do{
-    var matrix = JSON.parse(JSON.stringify(a));
-    
+    var matrix = JSON.parse(JSON.stringify(a)); // 为什么 a.slice() 好像不行？
     outerLoop:
     for(let i = 0; i < 9; i++){
       for(let j = 0; j < 9; j++){
-        if(matrix[i][j] === ''){
-          var thisCol = matrix.map((val) => val[j]).filter(v => v);
-          var thisRow = matrix[i].filter((v) => v);
-          var thisSqr = getSqr(matrix,i,j);
-          var ableArr = mergeArr(thisCol, thisRow, thisSqr);
-          let k = -1;
-          while(++k < ableArr.length){
-            if(checkValid(ableArr[k])){
-              matrix[i][j] = ableArr[k];
-              console.log('yay filled row', [...matrix[i]]);
-              continue;
-            } 
+        if(!matrix[i][j]){
+          let col = matrix.map((val) => val[j]).filter(v => v);
+          let row = matrix[i].filter((v) => v);
+          let sqr = getSqr(matrix,i,j);
+          let ableArr = mergeArr(col, row, sqr);
+          if(ableArr.length === 0){
+            break outerLoop;
           }
-          console.log()
-          break outerLoop;
-        
+          matrix[i][j] = ableArr[Math.floor(Math.random()*ableArr.length)];
         }
       }
     }
-
     counter ++;
   } while(!isFilled(matrix))
-  
-  console.log('success', counter, matrix);
-  return matrix;
+  console.log('完成棋盘！', counter, matrix);
 }
 
 
@@ -64,6 +52,7 @@ function isFilled(matrix){
       if(!matrix[i][j])
         return false;
     }
+    j = -1;
   }
   return true;
 }
@@ -83,5 +72,6 @@ function getSqr(matrix, r, c){
 function mergeArr(a,b,c){
   let arr1 = [...a, ...b.filter((v) => a.indexOf(v) === -1)];
   let arr2 = [...c, ...arr1.filter((v) => c.indexOf(v) === -1)];
-  return arr2;
+  let arrSD = [1,2,3,4,5,6,7,8,9];
+  return arrSD.filter(v => arr2.indexOf(v) === -1);
 }

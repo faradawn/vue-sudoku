@@ -1,7 +1,7 @@
 
 export function checkValid(r, c, val, matrix){
   if(!val){
-    console.log('check val is', val);
+    console.log('value to check', val);
     return false;
   }
   // 判断行和列
