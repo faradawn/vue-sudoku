@@ -33,6 +33,3 @@ export function checkValid(r, c, val, matrix){
 // ]
 
 // console.log(checkValid(7, 7, 7, matrix))
-
-let arr = [1,2,3]
-console.log(arr.splice(0,1)[0])
