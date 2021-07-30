@@ -1,9 +1,9 @@
 <template>
     <h2>数独棋盘</h2>
     <div class="button-line">
-      <button class="button" @click="createEasy">简单</button>
-      <button class="button" @click="createEasy">普通</button>
-      <button class="button" @click="createEasy">困难</button>
+      <button class="button" @click="createLevel(10)">简单</button>
+      <button class="button" @click="createLevel(20)">普通</button>
+      <button class="button" @click="createLevel(30)">困难</button>
     </div>
 
     <div 
@@ -29,9 +29,10 @@
 </template>
 
 <script>
-import { fillFirstThree } from '../utils/fillFirstThree.js';
+const {createEmpty, createBoard} = require('../utils/createBoard');
 
 export default {
+
   data(){
     return{
       myWidth: window.innerWidth,
@@ -44,18 +45,12 @@ export default {
   },
   methods: {
     emptyBoard(){
-      var board = Array.from(Array(9), () => new Array(9));
-      for(let i = 0; i<9; i++){
-        for(let j = 0; j<9; j++){
-          board[i][j] = '';
-        }
-      }
-      this.matrix = board;
-    },
-    createEasy(){
-      let matrix = fillFirstThree(this.matrix);
+      this.matrix = createEmpty();
 
-      this.matrix = matrix;
+    },
+    createLevel(num){
+      this.matrix = createBoard(num);
+
     },
     resize(){
       this.myWidth = window.innerWidth;

@@ -1,17 +1,16 @@
-createBoard();
-/**
- * 生成随机棋盘
- * @return {[[]]} 二维数组
- */
-export function createBoard(){
+module.exports = {
+  createEmpty,
+  createBoard,
+  
+}
+
+function createBoard(num){
   var board = createEmpty();
   fillFirstThree(board);
   board = fillRest(board);
-  createHoles(board, 10);
-  console.log('生成的棋盘', board);
+  createHoles(board, num);
+  return board;
 
-  var userInput = [];
-  checkBoard(board, userInput);
 
 }
 
@@ -28,7 +27,7 @@ function checkBoard(matrix, inputArr){
   return true;
 }
 
-export function checkCell(cell, matrix){
+function checkCell(cell, matrix){
   var r = cell.x, c = cell.y, val = cell.val;
   if(!val){
     console.log('value to check', val);
@@ -63,7 +62,6 @@ function createHoles(matrix, num){
   }
   return matrix;
 }
-
 
 function fillRest(a){
   var counter = 0;
@@ -154,4 +152,5 @@ function mergeArr(a,b,c){
   let arrSD = [1,2,3,4,5,6,7,8,9];
   return arrSD.filter(v => arr2.indexOf(v) === -1);
 }
+
 
