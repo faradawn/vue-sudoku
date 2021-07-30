@@ -28,7 +28,7 @@ function shuffleSwitch(arr){
 // 3 Fisher-Yates Shuffle
 function shuffleFisher(arr){
   let i = arr.length;
-  while(++i < arr.length){
+  while(i > 0){
     let r = Math.floor(Math.random() * i--);
     [arr[i], arr[r]] = [arr[r], arr[i]];
   }
@@ -75,13 +75,11 @@ function arrGen(b){
  * @returns {[number]} 数组
  */
 export function generateNine(){
-  return shuffleDraw(arrGen(9));
+  return shuffleFisher(arrGen(9));
 }
 
 
 // ===== 执行部分 ======
-
-
 
 
 
