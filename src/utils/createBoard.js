@@ -1,17 +1,28 @@
 module.exports = {
   createEmpty,
   createBoard,
-  
+  testTime,
+}
+
+function testTime(num, times){
+  var sum = 0;
+  for(let i = 0; i < times; i++){
+    sum += createBoard(num).time;
+  }
+  return sum/times
 }
 
 function createBoard(num){
+  var start = new Date().getTime();
+
   var board = createEmpty();
   fillFirstThree(board);
   board = fillRest(board);
   createHoles(board, num);
-  return board;
 
+  var end = new Date().getTime();
 
+  return {matrix: board, time: end-start};
 }
 
 function checkBoard(matrix, inputArr){

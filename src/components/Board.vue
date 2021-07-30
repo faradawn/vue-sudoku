@@ -20,8 +20,16 @@
           'border-bottom: 1px solid red; border-right: 1px solid red' :
           'border-right: 1px solid red' : rowIndex % 3 === 2 && rowIndex != 8?
           'border-bottom: 1px solid red;' : ''">
-          {{cell}}
+          <div v-if="cell">
+            {{cell}}
+          </div>
+          <div v-else>
+            <input :id="rowIndex+''+cellIndex" class="inputBox" @keyup="addInput">
+          </div>
       </div>
+    </div>
+    <div>
+      <pre>inputArr: {{inputArr}}</pre>
     </div>
     
     
@@ -29,16 +37,17 @@
 </template>
 
 <script>
-const {createEmpty, createBoard} = require('../utils/createBoard');
+const {createEmpty, createBoard, testTime} = require('../utils/createBoard');
 
 export default {
-
   data(){
     return{
-      myWidth: window.innerWidth,
       matrix: [[]],
+      inputArr: [],
+
     }
   },
+
   mounted(){
     this.emptyBoard();
 
@@ -46,28 +55,44 @@ export default {
   methods: {
     emptyBoard(){
       this.matrix = createEmpty();
-
     },
     createLevel(num){
-      this.matrix = createBoard(num);
+      this.inputArr = [];
+      this.matrix = createBoard(num).matrix;
+      let times = 50;
+      console.log(num/10,`开始执行${times}次`);
+      let start = new Date().getTime();
+      console.log(num/10,'平均运行时间', testTime(num, times), 'ms');
+      let end = new Date().getTime();
+      console.log('总用时',end-start);
 
     },
-    resize(){
-      this.myWidth = window.innerWidth;
+    addInput(e){
+      console.log(e.target.value)
+      let val = parseInt(e.target.value);
+      let x = parseInt(e.target.id.substring(0,1));
+      let y = parseInt(e.target.id.substring(1,2));
+      if(0 < val < 10){
+        this.inputArr.push({
+          x: e.target.id.substring(0,1),
+          y: e.target.id.substring(1,2),
+          val: val
+        })
+      } else{
+        console.log('请输入1-9的数字', val);
+      }
     }
 
   },
   
-  created() {
-    window.addEventListener("resize", this.resize);
-  },
-  destroyed() {
-    window.removeEventListener("resize", this.resize);
-  },
 }
 </script>
 
 <style scoped>
+.inputBox {
+  width: 1rem;
+  height: 1rem;
+}
 .button-line{
   display: flex;
   flex-direction: row;
