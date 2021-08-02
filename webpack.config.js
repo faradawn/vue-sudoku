@@ -44,7 +44,8 @@ module.exports = {
     }),
     new VueLoaderPlugin(),
     new CleanWebpackPlugin(),
-    new webpack.HotModuleReplacementPlugin()
+    new webpack.HotModuleReplacementPlugin(),
+
   ],
   devServer: {
     contentBase: path.resolve(__dirname, './dist'),

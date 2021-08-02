@@ -1,49 +1,62 @@
 <template>
+  <div class="main">
+
     <h2>数独棋盘</h2>
     <div class="button-line">
       <button class="button" @click="createLevel(10)">简单</button>
       <button class="button" @click="createLevel(20)">普通</button>
       <button class="button" @click="createLevel(30)">困难</button>
     </div>
+    <div class="button-line">
+      <button class="button" @click="testGenerate(1, 50)" >v1生成测速</button>
+      <pre v-if="runtime[0] != 0">用时: {{runtime[0]}}ms</pre>
+    </div>
+    <div class="button-line">
+      <button class="button" @click="testGenerate(2, 50)" >v2生成测速</button>
+      <pre v-if="runtime[1] != 0">用时: {{runtime[1]}}ms</pre>
+    </div>
 
-    <div 
-      class='line'
-      v-for='(row, rowIndex) in matrix'
-      :key='rowIndex*10'>
-      
-      <div
-       class='cell'
-        v-for='(cell, cellIndex) in row'
-        :key='cellIndex'
-        :style="cellIndex % 3 === 2 && cellIndex != 8 ?
-          rowIndex % 3 === 2 && rowIndex != 8 ? 
-          'border-bottom: 1px solid red; border-right: 1px solid red' :
-          'border-right: 1px solid red' : rowIndex % 3 === 2 && rowIndex != 8?
-          'border-bottom: 1px solid red;' : ''">
-          <div v-if="cell">
-            {{cell}}
-          </div>
-          <div v-else>
-            <input :id="rowIndex+''+cellIndex" class="inputBox" @keyup="addInput">
-          </div>
+    <div class="board-container">
+      <div 
+        class='line'
+        v-for='(row, rowIndex) in matrix'
+        :key='rowIndex*10'>
+        
+        <div
+        class='cell'
+          v-for='(cell, cellIndex) in row'
+          :key='cellIndex'
+          :style="cellIndex % 3 === 2 && cellIndex != 8 ?
+            rowIndex % 3 === 2 && rowIndex != 8 ? 
+            'border-bottom: 1px solid red; border-right: 1px solid red' :
+            'border-right: 1px solid red' : rowIndex % 3 === 2 && rowIndex != 8?
+            'border-bottom: 1px solid red;' : ''">
+            <div v-if="cell">
+              {{cell}}
+            </div>
+            <div v-else>
+              <input :id="rowIndex+''+cellIndex" class="inputBox" @keyup="addInput">
+            </div>
+        </div>
       </div>
     </div>
-    <div>
-      <pre>inputArr: {{inputArr}}</pre>
-    </div>
-    
-    
-    
+
+
+  </div>  
 </template>
 
 <script>
-const {createEmpty, createBoard, testTime} = require('../utils/createBoard');
+const {createBoard_v1} = require('../utils/createBoard_v1');
+const {createBoard_v2} = require('../utils/createBoard_v2');
+const {createEmpty, testTime} = require('../utils/utils')
 
 export default {
   data(){
     return{
       matrix: [[]],
       inputArr: [],
+      loading: false,
+      runtime: [0,0],
 
     }
   },
@@ -52,21 +65,34 @@ export default {
     this.emptyBoard();
 
   },
+
   methods: {
     emptyBoard(){
       this.matrix = createEmpty();
     },
     createLevel(num){
       this.inputArr = [];
-      this.matrix = createBoard(num).matrix;
-      let times = 50;
-      console.log(num/10,`开始执行${times}次`);
       let start = new Date().getTime();
-      console.log(num/10,'平均运行时间', testTime(num, times), 'ms');
+      this.matrix = createBoard_v1(num).matrix;
       let end = new Date().getTime();
-      console.log('总用时',end-start);
+      console.log(`用时 ${end-start}ms`);
 
     },
+    testGenerate(version, times){
+      console.log(`开始执行${times}次`);
+      var runtime;
+      if(version === 1){
+        runtime = testTime(createBoard_v1, 20, times);
+        this.runtime[0] = runtime;
+      } else if(version === 2){
+        runtime = testTime(createBoard_v2, 20, times);
+        this.runtime[1] = runtime;
+      }
+      console.log(`平均速度 ${runtime}ms`);
+      this.createLevel(20);
+      
+    },
+
     addInput(e){
       console.log(e.target.value)
       let val = parseInt(e.target.value);
@@ -89,23 +115,32 @@ export default {
 </script>
 
 <style scoped>
+.main{
+  padding: 0 20px;
+}
 .inputBox {
   width: 1rem;
   height: 1rem;
+  text-align: center;
 }
 .button-line{
   display: flex;
   flex-direction: row;
-  margin-bottom: 30px;
+  align-items: center;
+  margin-bottom: 5px;
 }
 .button{
   margin-right: 10px;
+  height: 30px;
 }
+.board-container{
+  margin: 20px 0;
+}
+
 .line {
   width: 18rem;
   display: flex;
   flex-direction: row;
-
 }
 .cell {
   width: 2rem;

@@ -1,31 +1,37 @@
 module.exports = {
   createEmpty,
-  createBoard,
+  createHoles,
   testTime,
+  checkBoard,
+  checkCell,
+  checkInput,
+  shuffleFisher,
+  getSqr,
+  isFilled,
+  mergeArr,
 }
 
-function testTime(num, times){
-  var sum = 0;
-  for(let i = 0; i < times; i++){
-    sum += createBoard(num).time;
+/**
+ * 创建空的二维数组
+ * @returns 
+ */
+ function createEmpty(){
+  var board = Array.from(Array(9), () => new Array(9));
+  for(let i = 0; i<9; i++){
+    for(let j = 0; j<9; j++){
+      board[i][j] = '';
+    }
   }
-  return sum/times
+  return board;
 }
 
-function createBoard(num){
-  var start = new Date().getTime();
-
-  var board = createEmpty();
-  fillFirstThree(board);
-  board = fillRest(board);
-  createHoles(board, num);
-
-  var end = new Date().getTime();
-
-  return {matrix: board, time: end-start};
-}
-
-function checkBoard(matrix, inputArr){
+/**
+ * 检测用户输入
+ * @param {[[]]} matrix 
+ * @param {[]} inputArr 
+ * @returns 
+ */
+function checkInput(matrix, inputArr){
   for(let i = 0; i < inputArr.length; i++){
     matrix[inputArr[i].x][inputArr[i].y] = '';
     if(!checkCell(inputArr[i], matrix)){
@@ -37,7 +43,32 @@ function checkBoard(matrix, inputArr){
   }
   return true;
 }
-
+/**
+ * 检测整个棋盘
+ * @param {[[]]} matrix 
+ * @returns 
+ */
+function checkBoard(matrix){
+  let i = -1, j = -1;
+  while(++i<9){
+    while(++j<9){
+      let temp = matrix[i][j];
+      matrix[i][j] = '';
+      if(!checkCell({x:i, y:j, val:temp}, matrix)){
+        console.log('which cell error',i,j, matrix[i])
+        return false;
+      }
+      matrix[i][j] = temp;
+    }
+  }
+  return true;
+}
+/**
+ * 检测单格是否合法
+ * @param {object} cell {x:0 ,y:0}
+ * @param {[[]]} matrix 
+ * @returns 
+ */
 function checkCell(cell, matrix){
   var r = cell.x, c = cell.y, val = cell.val;
   if(!val){
@@ -59,6 +90,12 @@ function checkCell(cell, matrix){
   return true;
 }
 
+/**
+ * 给数组挖空
+ * @param {*} matrix 
+ * @param {*} num 
+ * @returns 
+ */
 function createHoles(matrix, num){
   var pickArr = [];
   while(num > 0){
@@ -74,64 +111,6 @@ function createHoles(matrix, num){
   return matrix;
 }
 
-function fillRest(a){
-  var counter = 0;
-  do{
-    var matrix = JSON.parse(JSON.stringify(a)); // 为什么 a.slice() 好像不行？
-    outerLoop:
-    for(let i = 0; i < 9; i++){
-      for(let j = 0; j < 9; j++){
-        if(!matrix[i][j]){
-          let col = matrix.map((val) => val[j]).filter(v => v);
-          let row = matrix[i].filter((v) => v);
-          let sqr = getSqr(matrix,i,j);
-          let ableArr = mergeArr(col, row, sqr);
-          if(ableArr.length === 0){
-            break outerLoop;
-          }
-          matrix[i][j] = ableArr[Math.floor(Math.random()*ableArr.length)];
-        }
-      }
-    }
-    counter ++;
-  } while(!isFilled(matrix))
-  return matrix;
-}
-
-function fillFirstThree(matrix){
-
-  function fisherShuffle(arr){
-    let i = arr.length;
-    while(i > 0){
-      let r = Math.floor(Math.random() * i--);
-      [arr[i], arr[r]] = [arr[r], arr[i]];
-    }
-    return arr;
-  }
-
-  let iter = -1, k = 0;
-  while(++iter < 3){
-    var nineArray = fisherShuffle([1,2,3,4,5,6,7,8,9]);
-    for(let i = iter*3; i < iter*3+3; i++){
-      for(let j = iter*3; j < iter*3+3; j++){
-        matrix[i][j] = nineArray[k];
-        k++;
-      }
-    }
-    k = 0;
-  }
-  return matrix;
-}
-
-function createEmpty(){
-  var board = Array.from(Array(9), () => new Array(9));
-  for(let i = 0; i<9; i++){
-    for(let j = 0; j<9; j++){
-      board[i][j] = '';
-    }
-  }
-  return board;
-}
 
 function isFilled(matrix){
   let i = -1, j = -1;
@@ -164,4 +143,31 @@ function mergeArr(a,b,c){
   return arrSD.filter(v => arr2.indexOf(v) === -1);
 }
 
+/**
+ * 把数组洗牌
+ * @param {*} arr 
+ * @returns 
+ */
+ function shuffleFisher(arr){
+  let i = arr.length;
+  while(i > 0){
+    let r = Math.floor(Math.random() * i--);
+    [arr[i], arr[r]] = [arr[r], arr[i]];
+  }
+  return arr;
+}
 
+/**
+ * 测试生成棋盘速度
+ * @param {function} fn 测试的函数
+ * @param {number} num 挖多少空
+ * @param {numer} times 跑多少次
+ * @returns 
+ */
+ function testTime(fn, num, times){
+  var sum = 0;
+  for(let i = 0; i < times; i++){
+    sum += fn(num).time;
+  }
+  return sum/times;
+}

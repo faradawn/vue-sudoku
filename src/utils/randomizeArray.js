@@ -1,3 +1,7 @@
+module.exports = {
+  shuffleFisher,
+}
+
 // 1 抽取存储法
 function shuffleDraw(arr){
   let newArr = [];
@@ -25,7 +29,11 @@ function shuffleSwitch(arr){
   return arr;
 }
 
-// 3 Fisher-Yates Shuffle
+/**
+ * 把数组洗牌
+ * @param {*} arr 
+ * @returns 
+ */
 function shuffleFisher(arr){
   let i = arr.length;
   while(i > 0){
@@ -74,7 +82,7 @@ function arrGen(b){
  * 生成随机的九个数数组
  * @returns {[number]} 数组
  */
-export function generateNine(){
+function generateNine(){
   return shuffleFisher(arrGen(9));
 }
 

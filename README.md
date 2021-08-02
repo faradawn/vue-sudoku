@@ -1,9 +1,13 @@
-# 用 Js 搭建一个小数独
+# 如何用 Js 搭建一个小数独
+
+v1.0 暴力随机：150ms
+v2.0 平移法：0.2ms
 
 ## 步骤和可优化的点
 ### 1 - 生成棋盘
+1. 生成三个1-9的数组，填入对角三个九宫格
 - [] 回溯法，ableArr 树状结构
-- [] 用一维数组
+- [] 用一维数组 (可能效果不大)
 
 ### 2 - 棋盘挖空
 - [] pickArr 用两位数取代对象
@@ -17,12 +21,10 @@
 - [] 把地址赋回去，为什么不行？
 - [] a.slice() ？
 
-function modifyArr(a){
-  var copy_arr = JSON.parse(JSON.stringify(a)); // a.slice() 可以么？
-  a[0] = 10;
-  a = copy_arr; // 为什么不行？
-}
+## 要求
+棋盘上挖空不少于30个，不多于60个
+每个3*3棋盘中挖空不少于2个
 
-var test_arr = [1,2,3];
-modifyArr(test_arr);
-console.log(test_arr);
+把第一行左移3、6、1、4、7、2、5、8
+
+async 测试function button 
