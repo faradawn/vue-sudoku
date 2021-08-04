@@ -1,14 +1,14 @@
 module.exports = {
   createEmpty,
   createHoles,
+  fillFirstThree,
   testTime,
   checkBoard,
   checkCell,
   checkInput,
   shuffleFisher,
-  getSqr,
   isFilled,
-  mergeArr,
+  getAvailable
 }
 
 /**
@@ -170,4 +170,33 @@ function mergeArr(a,b,c){
     sum += fn(num).time;
   }
   return sum/times;
+}
+
+/**
+ * 获取可用的数字
+ * @param {[[]]} matrix 
+ * @param {number} i 
+ * @param {number} j 
+ * @returns 
+ */
+function getAvailable(matrix, i, j){
+  let col = matrix.map((val) => val[j]).filter(v => v);
+  let row = matrix[i].filter((v) => v);
+  let sqr = getSqr(matrix,i,j);
+  return mergeArr(col, row, sqr);
+}
+
+function fillFirstThree(matrix){
+  let iter = -1, k = 0;
+  while(++iter < 3){
+    var nineArray = shuffleFisher([1,2,3,4,5,6,7,8,9]);
+    for(let i = iter*3; i < iter*3+3; i++){
+      for(let j = iter*3; j < iter*3+3; j++){
+        matrix[i][j] = nineArray[k];
+        k++;
+      }
+    }
+    k = 0;
+  }
+  return matrix;
 }

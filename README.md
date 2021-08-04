@@ -28,3 +28,6 @@ v2.0 平移法：0.2ms
 把第一行左移3、6、1、4、7、2、5、8
 
 async 测试function button 
+
+回溯法
+- while 6 次
