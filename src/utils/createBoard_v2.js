@@ -1,4 +1,6 @@
-const { createEmpty, createHoles, shuffleFisher } = require('./utils');
+const {testTime, createEmpty, createHoles, shuffleFisher } = require('./utils');
+
+console.log(testTime(createBoard_v2, 50, 50));
 
 module.exports = {
   createBoard_v2,
