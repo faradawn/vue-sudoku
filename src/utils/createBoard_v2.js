@@ -1,10 +1,11 @@
 const {testTime, createEmpty, createHoles, shuffleFisher } = require('./utils');
 
-console.log(testTime(createBoard_v2, 50, 50));
-
 module.exports = {
   createBoard_v2,
 }
+
+// console.log(testTime(createBoard_v2, 50, 50));
+
 /**
  * 用平移法创建棋盘，输出matrix和time
  * @param {number} num 

@@ -1,10 +1,11 @@
 const {testTime, createHoles, createEmpty, fillFirstThree, isFilled, getAvailable, shuffleFisher} = require('./utils');
 
-console.log(testTime(createBoard_v1, 50, 50));
-
 module.exports = {
   createBoard_v1
 }
+
+// console.log(testTime(createBoard_v1, 50, 50));
+
 /**
  * 生成指定难度的棋盘
  * @param {number} num 挖空数量
