@@ -1,26 +1,28 @@
 <template>
   <div class="main">
-
-    <h2>数独棋盘</h2>
-    <!-- <div class="button-line">
-      <button class="button" @click="createLevel(10)">简单</button>
-      <button class="button" @click="createLevel(20)">普通</button>
-      <button class="button" @click="createLevel(30)">困难</button>
-    </div> -->
+    <h2>小数独：四种棋盘生成算法</h2>
+    <p>生成棋盘</p>
     <div class="button-line">
-      <button class="button" @click="testGenerate(1, 20)" >v1生成测速</button>
+      <button class="button" @click="createLevel(20)">简单</button>
+      <button class="button" @click="createLevel(30)">普通</button>
+      <button class="button" @click="createLevel(40)">困难</button>
+      <button class="button" @click="emptyBoard">清空</button>
+    </div>
+    <p>算法测速</p>
+    <div class="button-line">
+      <button class="button" @click="testGenerate(1, 5)" >v1：随机法</button>
       <pre v-if="runtime[0] != 0">用时: {{runtime[0]}}ms</pre>
     </div>
     <div class="button-line">
-      <button class="button" @click="testGenerate(2, 100)" >v2生成测速</button>
+      <button class="button" @click="testGenerate(2, 100)" >v2：平移法</button>
       <pre v-if="runtime[1] != 0">用时: {{runtime[1]}}ms</pre>
     </div>
     <div class="button-line">
-      <button class="button" @click="testGenerate(3, 100)" >v3生成测速</button>
+      <button class="button" @click="testGenerate(3, 10)" >v3：三宫法</button>
       <pre v-if="runtime[2] != 0">用时: {{runtime[2]}}ms</pre>
     </div>
     <div class="button-line">
-      <button class="button" @click="testGenerate(4, 100)" >v4生成测速</button>
+      <button class="button" @click="testGenerate(4, 100)" >v4：逐行法</button>
       <pre v-if="runtime[3] != 0">用时: {{runtime[3]}}ms</pre>
     </div>
 
@@ -64,38 +66,46 @@ export default {
     return{
       matrix: [[]],
       inputArr: [],
-      loading: false,
       runtime: [0,0,0,0],
-
     }
   },
   mounted(){
     this.emptyBoard();
   },
-
   methods: {
     emptyBoard(){
       this.matrix = createEmpty();
+      this.inputArr = [];
+      this.runtime = [0,0,0,0];
     },
     createLevel(num){
       this.inputArr = [];
-      this.matrix = createBoard_v1(num).matrix;
+      this.matrix = createBoard_v2(num).matrix;
     },
     testGenerate(version, times){
-      console.log(`v${version}开始执行${times}次`);
-      var runtime;
+      console.log(version === 1 ? `v${version}开始执行${times*5}次`
+      : `v${version}开始执行${times*10}次`);
+      var runtime = 0;
       if(version === 1){
-        runtime = testTime(createBoard_v1, 50, times);
-        this.runtime[0] = runtime;
+        for(let i=0; i<4; i++){
+          runtime += testTime(createBoard_v1, 50, times);
+        }
+        this.runtime[0] = (runtime/5).toFixed(2);
       } else if(version === 2){
-        runtime = testTime(createBoard_v2, 50, times);
-        this.runtime[1] = runtime;
+        for(let i=0; i<9; i++){
+          runtime += testTime(createBoard_v2, 50, times);
+        }
+        this.runtime[1] = (runtime/10).toFixed(2);
       } else if(version === 3){
-        runtime = testTime(createBoard_v3, 50, times);
-        this.runtime[2] = runtime;
+        for(let i=0; i<9; i++){
+          runtime += testTime(createBoard_v3, 50, times);
+        }
+        this.runtime[2] = (runtime/10).toFixed(2);
       } else if(version === 4){
-        runtime = testTime(createBoard_v4, 50, times);
-        this.runtime[3] = runtime;
+        for(let i=0; i<9; i++){
+          runtime += testTime(createBoard_v4, 50, times);
+        }
+        this.runtime[3] = (runtime/10).toFixed(2);
       }
       this.createLevel(20);
     },
