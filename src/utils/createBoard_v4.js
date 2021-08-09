@@ -4,16 +4,23 @@ module.exports = {
   createBoard_v4
 }
 
-// test();
+test();
 function test(){
   var counter = 0;
-  for(let i = 1; i<20; i++){
-    counter += testTime(createBoard_v4, 50, 50);
+  for(let i = 0; i<49; i++){
+    counter += testTime(createBoard_v4, 50, 200);
   }
-  console.log('avg', counter/20)
-  // v3.0 原始，avg 1.62ms
-  // v3.1 打乱 ableArr，avg 1.51ms, 随机取出 1.37ms
-  // v3.2 行列, avg 0.052ms，不随机取 0.050ms 
+  console.log('时间', counter/50)
+  // v4.0, 0.0231
+  // createEmpty: 改单循环 0.0215 -> 删除二维声明 0.0205 -> 全手写 0.0200
+  // 用push和pop取代k: 0.0200（无变化）
+  // getAvaible: 0.0179
+  // getSqr算格子取代双循环
+  // mergeArr 先三数组合并，再用set过滤
+  //// set 0.884 vs 原始array 0.53 -> 统一filter 0.31
+  // 
+  // TODO: 棋盘 ableArr 整体换成 set ？set.find vs arr[i] 索引哪个快
+  // TODO: 棋盘变成一维set值不值？
 }
 
 /**
@@ -33,27 +40,23 @@ function test(){
 function createRowTrace(){
   var matrix = createEmpty();
   var backArr = []; 
-  let i = -1; j = -1; k = 0;
+  let i = -1, j = -1;
   while(++i<9){
     while(++j<9){
       let ableArr = getAvailable(matrix, i, j);
       if(ableArr.length > 0){ 
-        let r = Math.floor(Math.random()*ableArr.length);
-        matrix[i][j] = ableArr.splice(ableArr.indexOf(r), 1)[0];
-        // matrix[i][j] = ableArr.pop();
-        backArr[k] = ableArr;
-        k++;
+        matrix[i][j] = ableArr.pop();
+        backArr.push(ableArr)
       } else {
         do{
           if(j === 0) {j=8; i--}
           else {j--}
-          k--;
+          backArr.pop()
           matrix[i][j] = '';
-        } while(backArr[k].length === 0)
-        matrix[i][j] = backArr[k].pop();
-        k++;
+        } while(backArr[k].length === 0) 
+        matrix[i][j] = backArr[backArr.length-1].pop();
       }
     }
   }
   return matrix;
-}
+} // 

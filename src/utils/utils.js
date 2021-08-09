@@ -16,13 +16,17 @@ module.exports = {
  * @returns 
  */
  function createEmpty(){
-  var board = Array.from(Array(9), () => new Array(9));
-  for(let i = 0; i<9; i++){
-    for(let j = 0; j<9; j++){
-      board[i][j] = '';
-    }
-  }
-  return board;
+   return [
+    ['','','','','','','','',''],
+    ['','','','','','','','',''],
+    ['','','','','','','','',''],
+    ['','','','','','','','',''],
+    ['','','','','','','','',''],
+    ['','','','','','','','',''],
+    ['','','','','','','','',''],
+    ['','','','','','','','',''],
+    ['','','','','','','','',''],
+   ] 
 }
 
 /**
@@ -124,30 +128,61 @@ function isFilled(matrix){
   return true;
 }
 
-function getSqr(matrix, r, c){
-  var row = Math.floor(r/3), col = Math.floor(c/3);
-  var arr = [];
-  for(let i = 3*row; i < 3*row+3; i++){
-    for(let j = 3*col; j < 3*col+3; j++){
-      if(matrix[i][j])
-        arr.push(matrix[i][j]);
-    }
-  }
-  return arr;
-}
-
-function mergeArr(a,b,c){
-  let arr1 = [...a, ...b.filter((v) => a.indexOf(v) === -1)];
-  let arr2 = [...c, ...arr1.filter((v) => c.indexOf(v) === -1)];
-  let arrSD = [1,2,3,4,5,6,7,8,9];
-  return arrSD.filter(v => arr2.indexOf(v) === -1);
-}
-
 /**
- * 把数组洗牌
- * @param {*} arr 
+ * 获取可用的数字
+ * @param {[[]]} matrix 
+ * @param {number} i 
+ * @param {number} j 
  * @returns 
  */
+ function getAvailable(matrix, i, j){ // 新版 
+  let col = matrix.map((val) => val[j]);
+  let row = matrix[i];
+  let sqr = getSqr(matrix,i,j);
+  return mergeArr(col, row, sqr);
+}
+// function getAvailable(matrix, i, j){
+//   let col = matrix.map((val) => val[j]).filter(v => v);
+//   let row = matrix[i].filter((v) => v);
+//   let sqr = getSqr(matrix,i,j);
+//   return mergeArr(col, row, sqr);
+// }
+
+function getSqr(matrix, i, j){ // 新版
+  i = Math.floor(i/3)*3
+  j = Math.floor(j/3)*3
+  return [
+    matrix[i][j], matrix[i][j+1], matrix[i][j+2], 
+    matrix[i+1][j], matrix[i+1][j+1], matrix[i+1][j+2],
+    matrix[i+2][j], matrix[i+2][j+1], matrix[i+2][j+2]];
+}
+
+// function getSqr(matrix, r, c){
+//   var row = Math.floor(r/3), col = Math.floor(c/3);
+//   var arr = [];
+//   for(let i = 3*row; i < 3*row+3; i++){
+//     for(let j = 3*col; j < 3*col+3; j++){
+//       if(matrix[i][j])
+//         arr.push(matrix[i][j]);
+//     }
+//   }
+//   return arr;
+// }
+
+
+function mergeArr(a,b,c){ // 新版
+  let arr = [...a, ...b, ...c];
+  let ableArr = [1,2,3,4,5,6,7,8,9,''];
+  return ableArr.filter(v => arr.indexOf(v) === -1);
+}
+// function mergeArr(a,b,c){
+//   let arr1 = [...a, ...b.filter((v) => a.indexOf(v) === -1)];
+//   let arr2 = [...c, ...arr1.filter((v) => c.indexOf(v) === -1)];
+//   let arrSD = [1,2,3,4,5,6,7,8,9];
+//   return arrSD.filter(v => arr2.indexOf(v) === -1);
+// }
+
+
  function shuffleFisher(arr){
   let i = arr.length;
   while(i > 0){
@@ -170,20 +205,6 @@ function mergeArr(a,b,c){
     sum += fn(num).time;
   }
   return sum/times;
-}
-
-/**
- * 获取可用的数字
- * @param {[[]]} matrix 
- * @param {number} i 
- * @param {number} j 
- * @returns 
- */
-function getAvailable(matrix, i, j){
-  let col = matrix.map((val) => val[j]).filter(v => v);
-  let row = matrix[i].filter((v) => v);
-  let sqr = getSqr(matrix,i,j);
-  return mergeArr(col, row, sqr);
 }
 
 function fillFirstThree(matrix){

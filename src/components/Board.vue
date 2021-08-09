@@ -14,15 +14,15 @@
       <pre v-if="runtime[0] != 0">用时: {{runtime[0]}}ms</pre>
     </div>
     <div class="button-line">
-      <button class="button" @click="testGenerate(2, 100)" >v2：平移法</button>
+      <button class="button" @click="testGenerate(2, 50)" >v2：平移法</button>
       <pre v-if="runtime[1] != 0">用时: {{runtime[1]}}ms</pre>
     </div>
     <div class="button-line">
-      <button class="button" @click="testGenerate(3, 10)" >v3：三宫法</button>
+      <button class="button" @click="testGenerate(3, 50)" >v3：三宫法</button>
       <pre v-if="runtime[2] != 0">用时: {{runtime[2]}}ms</pre>
     </div>
     <div class="button-line">
-      <button class="button" @click="testGenerate(4, 100)" >v4：逐行法</button>
+      <button class="button" @click="testGenerate(4, 50)" >v4：逐行法</button>
       <pre v-if="runtime[3] != 0">用时: {{runtime[3]}}ms</pre>
     </div>
 

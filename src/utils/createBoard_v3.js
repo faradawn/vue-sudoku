@@ -3,7 +3,15 @@ const { testTime, createEmpty,createHoles, fillFirstThree, getAvailable, checkBo
 module.exports = {
   createBoard_v3
 }
-
+test();
+function test(){
+  var counter = 0;
+  for(let i = 0; i<19; i++){
+    counter += testTime(createBoard_v3, 50, 50);
+  }
+  console.log('v3 时间', counter/20)
+  
+}
 /**
  * 回溯法生成，输出matrix和time
  * @param {number} num 
@@ -11,10 +19,10 @@ module.exports = {
  */
  function createBoard_v3(num){
   var start = new Date().getTime();
-  var board = createBackTrace();
+  var board = createBackTrace_new();
   createHoles(board, num);
   var end = new Date().getTime();
-  return {matrix: board, time: end-start};
+  return {matrix: board, time: end-start}; 
 }
 
   /**
@@ -79,12 +87,11 @@ function createBackTrace(){
 }
 
 function createBackTrace_new(){
-  var matrix = fillFirstThree(createEmpty()); // 先生成对角的三个
-  var backArr = []; // 存储回溯数组
+  var matrix = fillFirstThree(createEmpty()); 
+  var backArr = []; 
   let i = -1; j = -1; k = 0;
   while(++i<9){
     while(++j<9){
-      // 跳过生成好的三宫格
       switch(Math.floor(i/3)){
         case 0:
           if(j<=2) {j=3}
@@ -102,10 +109,8 @@ function createBackTrace_new(){
         matrix[i][j] = ableArr.splice(ableArr.indexOf(r), 1)[0];
         backArr[k] = ableArr;
         k++;
-      // 如果ableArr空了，开始回溯
       } else {
         do{
-          // 回到上一个还有可用数字的格子，换个新数字填入，并把一路上的格子清空
           k--;
           switch(Math.floor(i/3)){
             case 0:
