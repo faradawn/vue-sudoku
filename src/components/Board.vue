@@ -21,9 +21,15 @@
       <button class="button" @click="testGenerate(3, 50)" >v3：三宫法</button>
       <pre v-if="runtime[2] != 0">用时: {{runtime[2]}}ms</pre>
     </div>
+
     <div class="button-line">
-      <button class="button" @click="testGenerate(4, 50)" >v4：逐行法</button>
+      <button class="button" @click="testGenerate(4, 50)" >v4.0：逐行法</button>
       <pre v-if="runtime[3] != 0">用时: {{runtime[3]}}ms</pre>
+    </div>
+
+    <div class="button-line">
+      <button class="button" @click="testGenerate(5, 50)" >v4.1：逐行法</button>
+      <pre v-if="runtime[4] != 0">用时: {{runtime[4]}}ms</pre>
     </div>
 
     <div class="board-container">
@@ -59,6 +65,7 @@ const {createBoard_v1} = require('../utils/createBoard_v1');
 const {createBoard_v2} = require('../utils/createBoard_v2');
 const {createBoard_v3} = require('../utils/createBoard_v3');
 const {createBoard_v4} = require('../utils/createBoard_v4');
+const {createBoard_v4_1} = require('../utils/createBoard_v4_1');
 const {createEmpty, testTime} = require('../utils/utils')
 
 export default {
@@ -66,7 +73,7 @@ export default {
     return{
       matrix: [[]],
       inputArr: [],
-      runtime: [0,0,0,0],
+      runtime: [0,0,0,0,0],
     }
   },
   mounted(){
@@ -106,6 +113,11 @@ export default {
           runtime += testTime(createBoard_v4, 50, times);
         }
         this.runtime[3] = (runtime/10).toFixed(2);
+      } else if(version === 5){
+        for(let i=0; i<9; i++){
+          runtime += testTime(createBoard_v4_1, 50, times);
+        }
+        this.runtime[4] = (runtime/10).toFixed(2);
       }
       this.createLevel(20);
     },

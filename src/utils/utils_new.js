@@ -15,14 +15,18 @@ module.exports = {
  * 创建空的二维数组
  * @returns 
  */
- function createEmpty(){
-  var board = Array.from(Array(9), () => new Array(9));
-  for(let i = 0; i<9; i++){
-    for(let j = 0; j<9; j++){
-      board[i][j] = '';
-    }
-  }
-  return board;
+ function createEmpty(){ // 新版
+   return [
+    ['','','','','','','','',''],
+    ['','','','','','','','',''],
+    ['','','','','','','','',''],
+    ['','','','','','','','',''],
+    ['','','','','','','','',''],
+    ['','','','','','','','',''],
+    ['','','','','','','','',''],
+    ['','','','','','','','',''],
+    ['','','','','','','','',''],
+   ] 
 }
 
 /**
@@ -39,29 +43,50 @@ module.exports = {
   return mergeArr(col, row, sqr);
 }
 
-function getSqr(matrix, r, c){
-  var row = Math.floor(r/3), col = Math.floor(c/3);
-  var arr = [];
-  for(let i = 3*row; i < 3*row+3; i++){
-    for(let j = 3*col; j < 3*col+3; j++){
-      if(matrix[i][j])
-        arr.push(matrix[i][j]);
-    }
-  }
-  return arr;
+function getSqr(matrix, i, j){ // 新版
+  i = Math.floor(i/3)*3
+  j = Math.floor(j/3)*3
+  return [
+    matrix[i][j], matrix[i][j+1], matrix[i][j+2], 
+    matrix[i+1][j], matrix[i+1][j+1], matrix[i+1][j+2],
+    matrix[i+2][j], matrix[i+2][j+1], matrix[i+2][j+2]];
 }
 
-function mergeArr(a,b,c){
-  let arr1 = [...a, ...b.filter((v) => a.indexOf(v) === -1)];
-  let arr2 = [...c, ...arr1.filter((v) => c.indexOf(v) === -1)];
-  let arrSD = [1,2,3,4,5,6,7,8,9];
-  return arrSD.filter(v => arr2.indexOf(v) === -1);
+function mergeArr(a,b,c){ // 新版
+  let arr = [...a, ...b, ...c];
+  let ableArr = [1,2,3,4,5,6,7,8,9,''];
+  return ableArr.filter(v => arr.indexOf(v) === -1);
+  // 把v当成指针
+  // 
 }
+
+
+
+
 
 
 /**
+ * 检测用户输入
+ * @param {[[]]} matrix 
+ * @param {[]} inputArr 
+ * @returns 
+ */
+function checkInput(matrix, inputArr){
+  for(let i = 0; i < inputArr.length; i++){
+    matrix[inputArr[i].x][inputArr[i].y] = '';
+    if(!checkCell(inputArr[i], matrix)){
+      console.log('答案有误', inputArr[i]);
+      matrix[inputArr[i].x][inputArr[i].y] = inputArr.val;
+      return false;
+    }
+    matrix[inputArr[i].x][inputArr[i].y] = inputArr.val;
+  }
+  return true;
+}
+
+/**
  * 检查棋盘是否填满
- * @param {[]} matrix 
+ * @param {*} matrix 
  * @returns 
  */
  function isFilled(matrix){
@@ -80,7 +105,7 @@ function mergeArr(a,b,c){
  * @param {[[]]} matrix 
  * @returns 
  */
- function checkBoard(matrix){
+function checkBoard(matrix){
   let i = -1, j = -1;
   while(++i<9){
     while(++j<9){
@@ -95,25 +120,6 @@ function mergeArr(a,b,c){
   }
   return true;
 }
-/**
- * 检测用户输入
- * @param {[[]]} matrix 
- * @param {[]} inputArr 
- * @returns 
- */
- function checkInput(matrix, inputArr){
-  for(let i = 0; i < inputArr.length; i++){
-    matrix[inputArr[i].x][inputArr[i].y] = '';
-    if(!checkCell(inputArr[i], matrix)){
-      console.log('答案有误', inputArr[i]);
-      matrix[inputArr[i].x][inputArr[i].y] = inputArr.val;
-      return false;
-    }
-    matrix[inputArr[i].x][inputArr[i].y] = inputArr.val;
-  }
-  return true;
-}
-
 /**
  * 检测单格是否合法
  * @param {object} cell {x:0 ,y:0}
@@ -165,7 +171,7 @@ function createHoles(matrix, num){
  * @param {*} arr 
  * @returns 
  */
-function shuffleFisher(arr){
+ function shuffleFisher(arr){
   let i = arr.length;
   while(i > 0){
     let r = Math.floor(Math.random() * i--);
