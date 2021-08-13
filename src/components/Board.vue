@@ -8,28 +8,29 @@
       <button class="button" @click="createLevel(40)">困难</button>
       <button class="button" @click="emptyBoard">清空</button>
     </div>
-    <p>算法测速</p>
-    <div class="button-line">
-      <button class="button" @click="testGenerate(1, 5)" >v1：随机法</button>
-      <pre v-if="runtime[0] != 0">用时: {{runtime[0]}}ms</pre>
-    </div>
-    <div class="button-line">
-      <button class="button" @click="testGenerate(2, 50)" >v2：平移法</button>
-      <pre v-if="runtime[1] != 0">用时: {{runtime[1]}}ms</pre>
-    </div>
-    <div class="button-line">
-      <button class="button" @click="testGenerate(3, 50)" >v3：三宫法</button>
-      <pre v-if="runtime[2] != 0">用时: {{runtime[2]}}ms</pre>
-    </div>
 
-    <div class="button-line">
-      <button class="button" @click="testGenerate(4, 50)" >v4.0：逐行法</button>
-      <pre v-if="runtime[3] != 0">用时: {{runtime[3]}}ms</pre>
-    </div>
-
-    <div class="button-line">
-      <button class="button" @click="testGenerate(5, 50)" >v4.1：逐行法</button>
-      <pre v-if="runtime[4] != 0">用时: {{runtime[4]}}ms</pre>
+    <div>
+      <p>算法测速</p>
+      <div class="button-line">
+        <button class="button" @click="testGenerate(1, 5)" >v1：随机法</button>
+        <pre v-if="runtime[0] != 0">用时: {{runtime[0]}}s</pre>
+      </div>
+      <div class="button-line">
+        <button class="button" @click="testGenerate(2, 50)" >v2：平移法</button>
+        <pre v-if="runtime[1] != 0">用时: {{runtime[1]}}s</pre>
+      </div>
+      <div class="button-line">
+        <button class="button" @click="testGenerate(3, 50)" >v3：三宫法</button>
+        <pre v-if="runtime[2] != 0">用时: {{runtime[2]}}s</pre>
+      </div>
+      <div class="button-line">
+        <button class="button" @click="testGenerate(4, 50)" >v4：逐行法</button>
+        <pre v-if="runtime[3] != 0">用时: {{runtime[3]}}s</pre>
+      </div>
+      <div class="button-line">
+        <button class="button" @click="testGenerate(5, 50)" >v5：最终优化</button>
+        <pre v-if="runtime[4] != 0">用时: {{runtime[4]}}s</pre>
+      </div>
     </div>
 
     <div class="board-container">
@@ -56,7 +57,6 @@
       </div>
     </div>
 
-
   </div>  
 </template>
 
@@ -65,15 +65,15 @@ const {createBoard_v1} = require('../utils/createBoard_v1');
 const {createBoard_v2} = require('../utils/createBoard_v2');
 const {createBoard_v3} = require('../utils/createBoard_v3');
 const {createBoard_v4} = require('../utils/createBoard_v4');
-const {createBoard_v4_1} = require('../utils/createBoard_v4_1');
-const {createEmpty, testTime} = require('../utils/utils')
+const {createBoard_v5} = require('../utils/createBoard_v5');
+const {createEmpty, testTime} = require('../utils/utils');
 
 export default {
   data(){
     return{
       matrix: [[]],
       inputArr: [],
-      runtime: [0,0,0,0,0],
+      runtime: [0,0,0,0,0]
     }
   },
   mounted(){
@@ -83,11 +83,26 @@ export default {
     emptyBoard(){
       this.matrix = createEmpty();
       this.inputArr = [];
-      this.runtime = [0,0,0,0];
+      this.runtime = [0,0,0,0,0];
     },
-    createLevel(num){
+    createLevel(num, version){
       this.inputArr = [];
-      this.matrix = createBoard_v2(num).matrix;
+      switch (version){
+        case 1:
+          this.matrix = createBoard_v1(num).matrix;
+          break;
+        case 3:
+          this.matrix = createBoard_v3(num).matrix;
+          break;
+        case 4:
+          this.matrix = createBoard_v4(num).matrix;
+          break;
+        case 5:
+          this.matrix = createBoard_v5(num).matrix;
+          break;
+        default:
+          this.matrix = createBoard_v2(num).matrix;
+      }
     },
     testGenerate(version, times){
       console.log(version === 1 ? `v${version}开始执行${times*5}次`
@@ -115,13 +130,12 @@ export default {
         this.runtime[3] = (runtime/10).toFixed(2);
       } else if(version === 5){
         for(let i=0; i<9; i++){
-          runtime += testTime(createBoard_v4_1, 50, times);
+          runtime += testTime(createBoard_v5, 50, times);
         }
         this.runtime[4] = (runtime/10).toFixed(2);
       }
-      this.createLevel(20);
+      this.createLevel(20, version);
     },
-
     addInput(e){
       console.log(e.target.value)
       let val = parseInt(e.target.value);
@@ -137,9 +151,7 @@ export default {
         console.log('请输入1-9的数字', val);
       }
     }
-
   },
-  
 }
 </script>
 

@@ -8,7 +8,9 @@ module.exports = {
   checkInput,
   shuffleFisher,
   isFilled,
-  getAvailable
+  getAvailable,
+  getAvailable_new,
+  createEmpty_new
 }
 
 /**
@@ -24,6 +26,19 @@ module.exports = {
   }
   return board;
 }
+function createEmpty_new(){ 
+  return [
+   ['','','','','','','','',''],
+   ['','','','','','','','',''],
+   ['','','','','','','','',''],
+   ['','','','','','','','',''],
+   ['','','','','','','','',''],
+   ['','','','','','','','',''],
+   ['','','','','','','','',''],
+   ['','','','','','','','',''],
+   ['','','','','','','','',''],
+  ] 
+}
 
 /**
  * 获取可用的数字
@@ -33,30 +48,55 @@ module.exports = {
  * @returns 
  */
  function getAvailable(matrix, i, j){
+  function getSqr(matrix, r, c){
+    var row = Math.floor(r/3), col = Math.floor(c/3);
+    var arr = [];
+    for(let i = 3*row; i < 3*row+3; i++){
+      for(let j = 3*col; j < 3*col+3; j++){
+        if(matrix[i][j])
+          arr.push(matrix[i][j]);
+      }
+    }
+    return arr;
+  }
+  function mergeArr(a,b,c){
+    let arr1 = [...a, ...b.filter((v) => a.indexOf(v) === -1)];
+    let arr2 = [...c, ...arr1.filter((v) => c.indexOf(v) === -1)];
+    let arrSD = [1,2,3,4,5,6,7,8,9];
+    return arrSD.filter(v => arr2.indexOf(v) === -1);
+  }
   let col = matrix.map((val) => val[j]);
   let row = matrix[i];
   let sqr = getSqr(matrix,i,j);
   return mergeArr(col, row, sqr);
 }
 
-function getSqr(matrix, r, c){
-  var row = Math.floor(r/3), col = Math.floor(c/3);
-  var arr = [];
-  for(let i = 3*row; i < 3*row+3; i++){
-    for(let j = 3*col; j < 3*col+3; j++){
-      if(matrix[i][j])
-        arr.push(matrix[i][j]);
+function getAvailable_new(matrix, i, j){
+  let ableArr = [1,2,3,4,5,6,7,8,9]; 
+  for(let a = 0; a < j; a++){ // 行
+    let p = ableArr.indexOf(matrix[i][a])
+    ableArr.splice(p, 1);
+  }
+  for(let b = 0; b < i; b++){ // 列
+    let p = ableArr.indexOf(matrix[b][j])
+    if(p !== -1){
+      ableArr.splice(p, 1);
     }
   }
-  return arr;
+  if(ableArr.length === 0){ // 提前终止
+    return [];
+  }
+  for(let x = Math.floor(i/3)*3; x < i; x++){ // 宫格
+    for(let y = Math.floor(j/3)*3; y < Math.floor(j/3)*3+3; y++){
+      let p = ableArr.indexOf(matrix[x][y])
+      if(p !== -1){
+        ableArr.splice(p, 1);
+      }
+    }
+  }
+  return ableArr;
 }
 
-function mergeArr(a,b,c){
-  let arr1 = [...a, ...b.filter((v) => a.indexOf(v) === -1)];
-  let arr2 = [...c, ...arr1.filter((v) => c.indexOf(v) === -1)];
-  let arrSD = [1,2,3,4,5,6,7,8,9];
-  return arrSD.filter(v => arr2.indexOf(v) === -1);
-}
 
 
 /**

@@ -1,29 +1,28 @@
-const { testTime, createEmpty,createHoles, isFilled, getAvailable, checkBoard, shuffleFisher } = require('./utils');
+const { createEmpty_new, getAvailable_new, createHoles, shuffleFisher } = require('./utils');
 module.exports = {
-  createBoard_v4
+  createBoard_v5
 }
 
 /**
- * v4 原始行列法
+ * v5 最终优化
  */
-function createBoard_v4(num){
+ function createBoard_v5(num){
   var start = new Date().getTime();
-  var board = algorithm_v4();
+  var board = algorithm_v5();
   createHoles(board, num);
   var end = new Date().getTime();
   return {matrix: board, time: end-start};
 }
 
-function algorithm_v4(){
-  var matrix = createEmpty();
-  var backArr = []; 
+function algorithm_v5(){
+  var matrix = createEmpty_new();
+  var backArr = [];
   let i = -1; j = -1; k = 0;
   while(++i<9){
     while(++j<9){
-      let ableArr = getAvailable(matrix, i, j);
+      let ableArr = shuffleFisher(getAvailable_new(matrix, i, j));
       if(ableArr.length > 0){ 
-        let r = Math.floor(Math.random()*ableArr.length); 
-        matrix[i][j] = ableArr.splice(ableArr.indexOf(r), 1)[0];
+        matrix[i][j] = ableArr.pop();
         backArr[k] = ableArr;
         k++;
       } else {
