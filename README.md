@@ -1,7 +1,7 @@
 # Js小数独：四种棋盘生成法
 <p float="left">
-  <img src="/src/assets/screen-1.png" width="80" height="100" />
-  <img src="/src/assets/screen-2.png" width="100" height="100"/> 
+  <img src="/src/assets/screen-1.png" width="160" height="200" />
+  <img src="/src/assets/screen-2.png" width="200" height="200"/> 
 </p>
 
 ## 生成测速 ⏱️（1000次挖50空）
