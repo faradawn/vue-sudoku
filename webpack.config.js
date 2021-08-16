@@ -1,11 +1,10 @@
 // webpack config
 
-const path = require('path');
+const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const { VueLoaderPlugin } = require('vue-loader/dist/index')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const webpack = require('webpack')
-
 
 module.exports = {
   mode: 'development',
@@ -31,8 +30,8 @@ module.exports = {
       },
       {
         test: /\.js$/,
-        exclude: /node_modules/, 
-        loader: 'babel-loader'
+        exclude: /node_modules/,
+        use: ['babel-loader', 'eslint-loader']
       }
     ]
   },
@@ -40,11 +39,11 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, './index.html'),
       filename: 'index.html',
-      title: '给老师的数独' 
+      title: '给老师的数独'
     }),
     new VueLoaderPlugin(),
     new CleanWebpackPlugin(),
-    new webpack.HotModuleReplacementPlugin(),
+    new webpack.HotModuleReplacementPlugin()
 
   ],
   devServer: {
@@ -53,5 +52,3 @@ module.exports = {
     publicPath: '/'
   }
 }
-
-
