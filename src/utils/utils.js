@@ -9,8 +9,7 @@ module.exports = {
   shuffleFisher,
   isFilled,
   getAvailable,
-  getAvailable_new,
-  createEmpty_new
+  getAvailable_new
 }
 
 /**
@@ -18,15 +17,6 @@ module.exports = {
  * @returns
  */
 function createEmpty () {
-  const board = Array.from(Array(9), () => new Array(9))
-  for (let i = 0; i < 9; i++) {
-    for (let j = 0; j < 9; j++) {
-      board[i][j] = ''
-    }
-  }
-  return board
-}
-function createEmpty_new () {
   return [
     ['', '', '', '', '', '', '', '', ''],
     ['', '', '', '', '', '', '', '', ''],

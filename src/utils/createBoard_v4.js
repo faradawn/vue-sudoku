@@ -14,6 +14,7 @@ function createBoard_v4 (num) {
   return { matrix: board, time: end - start }
 }
 
+// 一万次0.1s左右
 function algorithm_v4 () {
   const matrix = createEmpty()
   const backArr = []

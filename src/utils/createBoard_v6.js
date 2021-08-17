@@ -5,27 +5,18 @@ module.exports = {
 
 function getAvailable_new (matrix, i, j) {
   const ableArr = { '1': 1, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 6, '8': 8, '9': 9 }
-  matrix[i].forEach(num => {
-    if (ableArr[num]) {
-      ableArr[num] = null
-    }
+  matrix[i].forEach((val, key) => {
+    if (ableArr[val]) ableArr[val] = null
+    if (ableArr[matrix[key][j]]) ableArr[matrix[key][j]] = null
   })
-  for (let b = 0; b < i; b++) { // 列
-    const num = matrix[b][j]
-    if (ableArr[num]) {
-      delete ableArr[num]
-    }
-  }
-  for (let x = Math.floor(i / 3) * 3; x < i; x++) {
-    for (let y = Math.floor(j / 3) * 3; y < Math.floor(j / 3) * 3 + 3; y++) {
-      const num = matrix[x][y]
-      if (ableArr[num]) {
-        delete ableArr[num]
-      }
-    }
-  }
+  const x = Math.floor(i / 3) * 3
+  const y = Math.floor(j / 3) * 3
+    [matrix[x][y], matrix[x][y + 1], matrix[x][y + 2], matrix[x + 1][y], matrix[x + 1][y + 1], matrix[x + 1][y + 2]].forEach(val => {
+      if (ableArr[val]) ableArr[val] = null
+    })
   return Object.values(ableArr)
 }
+
 // v5 裸函数: 941 (array index of) -> 380 (obj null) -> 607 (delete property)
 function algorithm_v5 () {
   const matrix = createEmpty()

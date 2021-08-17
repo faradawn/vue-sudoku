@@ -4,8 +4,6 @@ module.exports = {
   createBoard_v2
 }
 
-// console.log(testTime(createBoard_v2, 50, 50));
-
 /**
  * 用平移法创建棋盘，输出matrix和time
  * @param {number} num
@@ -19,7 +17,7 @@ function createBoard_v2 (num) {
   return { matrix: board, time: end - start }
 }
 /**
- * 平移法生成棋盘
+ * 平移法生成棋盘，一万次0.1s
  * @returns
  */
 function createParallex () {
@@ -34,3 +32,14 @@ function createParallex () {
   }
   return matrix
 }
+
+function test () {
+  const start = new Date().getTime()
+  for (let i = 0; i < 10000; i++) {
+    createParallex()
+  }
+  const end = new Date().getTime()
+  console.log('用时', end - start)
+}
+
+test()

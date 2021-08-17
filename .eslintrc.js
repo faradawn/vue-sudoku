@@ -13,7 +13,7 @@ module.exports = {
   rules: {
     'no-unused-vars': 'warn',
     'no-undef': 'warn',
-    'no-labels': ['error', { allowLoop: true }],
+    'no-labels': 'off',
     'camelcase': 'off',
     'quote-props': ['warn', 'consistent']
   }
