@@ -1,20 +1,7 @@
-const { createEmpty, createHoles, getAvailable } = require('./utils')
-module.exports = {
-  createBoard_v4
-}
+const { createEmpty, getAvailable, testPure } = require('./utils')
 
-/**
- * v4 原始行列法
- */
-function createBoard_v4 (num) {
-  const start = new Date().getTime()
-  const board = algorithm_v4()
-  createHoles(board, num)
-  const end = new Date().getTime()
-  return { matrix: board, time: end - start }
-}
+// v4 mergeArr: 一万次1.756s
 
-// 一万次0.1s左右
 function algorithm_v4 () {
   const matrix = createEmpty()
   const backArr = []
@@ -41,3 +28,5 @@ function algorithm_v4 () {
   }
   return matrix
 }
+
+testPure(algorithm_v4, 10000)

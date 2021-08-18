@@ -15,6 +15,7 @@ module.exports = {
     'no-undef': 'warn',
     'no-labels': 'off',
     'camelcase': 'off',
-    'quote-props': ['warn', 'consistent']
+    'quote-props': ['warn', 'consistent'],
+    'prefer-const': 'warn'
   }
 }

@@ -2,14 +2,25 @@ module.exports = {
   createEmpty,
   createHoles,
   fillFirstThree,
-  testTime,
   checkBoard,
   checkCell,
   checkInput,
   shuffleFisher,
   isFilled,
   getAvailable,
-  getAvailable_new
+  getAvailable_indexOf,
+  testTime,
+  testPure
+}
+
+function testPure (fn, times) {
+  const start = new Date().getTime()
+  for (let i = 0; i < times; i++) {
+    fn()
+  }
+  const end = new Date().getTime()
+  console.log('用时', end - start)
+  return end - start
 }
 
 /**
@@ -60,7 +71,7 @@ function getAvailable (matrix, i, j) {
   return mergeArr(col, row, sqr)
 }
 
-function getAvailable_new (matrix, i, j) {
+function getAvailable_indexOf (matrix, i, j) {
   const ableArr = [1, 2, 3, 4, 5, 6, 7, 8, 9]
   for (let a = 0; a < j; a++) { // 行
     const p = ableArr.indexOf(matrix[i][a])
@@ -197,6 +208,11 @@ function shuffleFisher (arr) {
   }
   return arr
 }
+// 更成 let i = Math.floor(arr.length / 2)
+// 速度翻倍，0.96 -> 0.55
+// 但棋盘时间从 560ms -> 1200ms
+// 原因可能，最后元素未变
+
 /**
  * 填入对角线三宫格
  * @param {*} matrix
