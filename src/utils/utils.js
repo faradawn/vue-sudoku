@@ -1,4 +1,5 @@
 module.exports = {
+  createGlobal,
   createEmpty,
   createHoles,
   fillFirstThree,
@@ -12,7 +13,14 @@ module.exports = {
   testTime,
   testPure
 }
-
+function createGlobal () {
+  obj = {
+    row0: 0, row1: 0, row2: 0, row3: 0, row4: 0, row5: 0, row6: 0, row7: 0, row8: 0,
+    col0: 0, col1: 0, col2: 0, col3: 0, col4: 0, col5: 0, col6: 0, col7: 0, col8: 0,
+    sqr00: 0, sqr01: 0, sqr02: 0, sqr10: 0, sqr11: 0, sqr12: 0, sqr20: 0, sqr21: 0, sqr22: 0
+  }
+  return obj;
+}
 function testPure (fn, times) {
   const start = new Date().getTime()
   for (let i = 0; i < times; i++) {
@@ -124,7 +132,7 @@ function checkBoard (matrix) {
       const temp = matrix[i][j]
       matrix[i][j] = ''
       if (!checkCell({ x: i, y: j, val: temp }, matrix)) {
-        console.log('which cell error', i, j, matrix[i])
+        matrix[i][j] = 'error' + temp
         return false
       }
       matrix[i][j] = temp

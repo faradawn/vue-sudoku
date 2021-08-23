@@ -27,7 +27,7 @@ function getAvailable_object (matrix, i, j) {
   }
   return Object.values(ableArr).filter(v => v)
 }
-// 570
+
 function algorithm_v6 () {
   const matrix = createEmpty()
   const backArr = []

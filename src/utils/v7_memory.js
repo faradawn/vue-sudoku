@@ -22,8 +22,8 @@ function getAvailable_memory (matrix, rowRemain, i, j) {
 }
 
 function pickAndDelete (ableArr, rowRemain) {
-  const keys = Object.keys(ableArr)
-  const a = keys[keys.length * Math.random() << 0]
+  const keys = Object.keys(ableArr) // 减少
+  const a = keys[keys.length * Math.random() << 0] // 随机
   const val = ableArr[a]
   delete ableArr[a]
   if (rowRemain) { delete rowRemain[a] }
