@@ -9,10 +9,17 @@ global['col5'] = 0b00100
 global['sqr01'] = 0b00110
 console.log('global', global)
 
-function setRowColSqr (i, j, global, a){
-  global[`row${i}`] = global[`row${i}`] | (1 << a)
-  global[`col${j}`] = global[`col${j}`] | (1 << a)
-  global[`sqr${(i/3)<<0}${(j/3)<<0}`] = global[`sqr${(i/3)<<0}${(j/3)<<0}`] | (1 << a)
+function setBits (i, j, global, a, action){
+  a --
+  if(action === 'add'){ // set 1
+    global[`row${i}`] |= 1 << a
+    global[`col${j}`] |= 1 << a
+    global[`sqr${(i/3)<<0}${(j/3)<<0}`] |= 1 << a
+  } else { // set 0
+    global[`row${i}`] &= ~(1 << a)
+    global[`col${j}`] &= ~(1 << a)
+    global[`sqr${(i/3)<<0}${(j/3)<<0}`] &= ~(1 << a)
+  }
 }
 
 function pickAndPush (i, j, global, backArr) {
@@ -27,12 +34,21 @@ function pickAndPush (i, j, global, backArr) {
     for (let p = 0; p < 9; p++) {
       if (!(combined & (1 << p))) { arr.push(p+1) } // 0-based
     }
-    const a = arr.splice(Math.floor(Math.random() * arr.length), 1)[0] - 1
+    let a = arr.splice(Math.floor(Math.random() * arr.length), 1)[0]
+    a = 1
     backArr.push(arr);
-    setRowColSqr(i, j, global, a)
-    return a + 1
+
+
+    setBits(i, j, global, a, 'add')
+    console.log('add', global)
+    setBits(i, j, global, 2, 'remove')
+    console.log('remove', global)
+
+    setBits(i, j, global, 2, 'add')
+    console.log('add', global)
+    return a
   }
 }
 
 let backArr = []
-console.log('returned a', pickAndPush(1, 5, global, backArr), global, backArr)
+console.log('return a', pickAndPush(1, 5, global, backArr))

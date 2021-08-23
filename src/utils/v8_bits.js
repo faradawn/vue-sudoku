@@ -1,25 +1,32 @@
 const { createEmpty, createGlobal, shuffleFisher, isFilled, checkBoard, testPure } = require('./utils')
 
-// v8 bits: 一万次
+// v8 bits: 一万次 1.0s
 
-function setRowColSqr (i, j, global, a){
-  global[`row${i}`] = global[`row${i}`] | (1 << a)
-  global[`col${j}`] = global[`col${j}`] | (1 << a)
-  global[`sqr${(i/3)<<0}${(j/3)<<0}`] = global[`sqr${(i/3)<<0}${(j/3)<<0}`] | (1 << a)
+function setBits (i, j, global, a, action){
+  a --
+  if(action === 'add'){ // set 1
+    global[`row${i}`] |= 1 << a
+    global[`col${j}`] |= 1 << a
+    global[`sqr${(i/3)<<0}${(j/3)<<0}`] |= 1 << a
+  } else { // set 0
+    global[`row${i}`] &= ~(1 << a)
+    global[`col${j}`] &= ~(1 << a)
+    global[`sqr${(i/3)<<0}${(j/3)<<0}`] &= ~(1 << a)
+  }
 }
 
-function pickAndPush (i, j, global, backArr) {
+function pickAndPush (i, j, k, global, backArr) {
   let combined = global[`row${i}`] | global[`col${j}`] | global[`sqr${(i/3)<<0}${(j/3)<<0}`]
   if(combined === 511) {
     return -1
   } else {
     const arr = []
     for (let p = 0; p < 9; p++) {
-      if (!(combined & (1 << p))) { arr.push(p+1) } // 0-based
+      if (!(combined & (1 << p))) { arr.push(p+1) }
     }
     const a = arr.splice(Math.floor(Math.random() * arr.length), 1)[0]
-    backArr.push(arr);
-    setRowColSqr(i, j, global, a-1)
+    backArr[k] = arr
+    setBits(i, j, global, a, 'add')
     return a 
   }
 }
@@ -31,40 +38,33 @@ function algorithm_v8 () {
   let i = -1; let j = -1; let k = 0
   while (++i < 9) {
     while (++j < 9) {
-      const a = pickAndPush(i, j, global, backArr)
+      const a = pickAndPush(i, j, k, global, backArr)
       if (a !== -1) {
-        matrix[i][j] = a;
-        console.log('fill', a, backArr[k])
+        matrix[i][j] = a
         k++
       } else {
         do {
-          console.log('start backtrace')
-          if (j === 0) { j = 8; i-- } else { j-- }
-          k--
-          let b = matrix[i][j] - 1
-          global[`row${i}`] = global[`row${i}`] & (0 << b)
-          global[`col${j}`] = global[`col${j}`] & (0 << b)
-          global[`sqr${(i/3)<<0}${(j/3)<<0}`] = global[`sqr${(i/3)<<0}${(j/3)<<0}`] & (0 << b)
+          if (j === 0) { j = 8; i--; } else { j--; }
+          k-- 
+          const b = matrix[i][j]
+          setBits(i, j, global, b, 'remove')
           matrix[i][j] = ''
         } while (backArr[k].length === 0)
 
-        let c = backArr[k].pop() - 1
-        matrix[i][j] = c + 1
-        global[`row${i}`] = global[`row${i}`] | (1 << c)
-        global[`col${j}`] = global[`col${j}`] | (1 << c)
-        global[`sqr${(i/3)<<0}${(j/3)<<0}`] = global[`sqr${(i/3)<<0}${(j/3)<<0}`] | (1 << c)
+        let c = backArr[k].pop()
+        matrix[i][j] = c
+        setBits(i, j, global, c, 'add')
         k++
 
       }
     }
     j = -1
   }
-  if (!isFilled(matrix) || !checkBoard(matrix)) {
-    console.log('error', matrix)
-  }
+  // if (!isFilled(matrix) || !checkBoard(matrix)) {
+  //   console.log('error', matrix)
+  // }
   return matrix
 }
 
-algorithm_v8()
 
-// testPure(algorithm_v8, 10000)
+testPure(algorithm_v8, 10000)
