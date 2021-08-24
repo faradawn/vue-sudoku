@@ -2,7 +2,7 @@
 const {isFilled, checkBoard } = require('./utils')
 
 // v8 bits 一万次: global对象`` 1000ms  -> 数组+dict 250ms -> 去掉arr 236ms -> 取代splice 180ms
-// 只有一次随机 180ms -> 第二次添加随机 184ms -> shuffle 235ms
+// 只有一次随机 180ms -> 第二次添加随机 184ms -> shuffle 235ms -> global l 186ms
 function createEmpty () {
   return [
     ['', '', '', '', '', '', '', '', ''],
@@ -29,10 +29,9 @@ function testPure (fn, times) {
 function algorithm_v8 () {
   const matrix = createEmpty()
   const backArr = []
+  const backArrLen = []
   const rows = [], cols = [], sqrs = []
-  const dict = [0,0,0,1,1,1,2,2,2, 0,0,0,1,1,1,2,2,2, 0,0,0,1,1,1,2,2,2,
-  3,3,3,4,4,4,5,5,5, 3,3,3,4,4,4,5,5,5, 3,3,3,4,4,4,5,5,5,
-  6,6,6,7,7,7,8,8,8, 6,6,6,7,7,7,8,8,8, 6,6,6,7,7,7,8,8,8,]
+  const dict = [0,0,0,1,1,1,2,2,2, 0,0,0,1,1,1,2,2,2, 0,0,0,1,1,1,2,2,2, 3,3,3,4,4,4,5,5,5, 3,3,3,4,4,4,5,5,5, 3,3,3,4,4,4,5,5,5,6,6,6,7,7,7,8,8,8, 6,6,6,7,7,7,8,8,8, 6,6,6,7,7,7,8,8,8,]
 
   let i = -1; let j = -1; let k = 0
 
@@ -45,10 +44,12 @@ function algorithm_v8 () {
           if (!(combined & (1 << p))) { backArr[k].push(p+1) }
         }
         // 第一处
-        let r = (Math.random() * backArr[k].length) << 0
+        let l = backArr[k].length
+        let r = (Math.random() * l) << 0
         let a = backArr[k][r]
-        backArr[k][r] = backArr[k][backArr[k].length-1]
-        backArr[k].pop() // pop 176, length-- 241
+        backArr[k][r] = backArr[k][l-1]
+        backArrLen[k] = l - 1
+        
 
         matrix[i][j] = a--
         rows[i] |= 1 << a
@@ -64,15 +65,15 @@ function algorithm_v8 () {
           cols[j] &= ~(1 << b)
           sqrs[dict[k]] &= ~(1 << b)
           matrix[i][j] = ''
-        } while (backArr[k].length === 0)
+        } while (backArrLen[k] === 0)
 
         // 第二处
         // 之前 let c = backArr[k].pop()
 
-        let r = Math.floor(Math.random() * backArr[k].length)
+        let r = (Math.random() * backArrLen[k]) << 0
         let c = backArr[k][r]
-        backArr[k][r] = backArr[k][backArr[k].length-1]
-        backArr[k].pop()
+        backArr[k][r] = backArr[k][backArrLen[k]-1]
+        backArrLen[k] --
 
         matrix[i][j] = c--
         rows[i] |= 1 << c

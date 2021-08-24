@@ -2,16 +2,24 @@ const { createEmpty, createGlobal, shuffleFisher, isFilled, checkBoard, testPure
 
 // v8 bits 一万次: global对象`` 1000ms  -> 数组+dict 250ms -> 去掉arr 236ms
 // 改写 splice 180ms -> 第二次添加随机 184ms
+// 现在 180
 
 function algorithm_v8 () {
-  const matrix = createEmpty()
+  const matrix = createEmpty()  
   const backArr = []
   const rows = [], cols = [], sqrs = []
-  const dict = [0,0,0,1,1,1,2,2,2, 0,0,0,1,1,1,2,2,2, 0,0,0,1,1,1,2,2,2,
+  const dict = [0,0,0,1,1,1,2,2,2, 0,0,0,1,1,1,2,2,2,
   3,3,3,4,4,4,5,5,5, 3,3,3,4,4,4,5,5,5, 3,3,3,4,4,4,5,5,5,
   6,6,6,7,7,7,8,8,8, 6,6,6,7,7,7,8,8,8, 6,6,6,7,7,7,8,8,8,]
+  matrix[0] = shuffleFisher([1,2,3,4,5,6,7,8,9])
+  rows[0] = 511
+  for(let q = 0; q < 9; q++){
+    cols[q] = 1 << (matrix[0][q]-1)
+    sqrs[dict[q]] = 1 << (matrix[0][q]-1)
+  }
+  console.log('first', cols, sqrs, rows, matrix)
 
-  let i = -1; let j = -1; let k = 0
+  let i = 0; let j = -1; let k = 0
 
   while (++i < 9) {
     while (++j < 9) {
@@ -64,4 +72,6 @@ function algorithm_v8 () {
   return matrix
 }
 
-testPure(algorithm_v8, 10000)
+
+algorithm_v8()
+// testPure(algorithm_v8, 10000)
