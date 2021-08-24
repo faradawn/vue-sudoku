@@ -1,30 +1,7 @@
+const { createEmpty, createGlobal, shuffleFisher, isFilled, checkBoard, testPure } = require('./utils')
 
-const {isFilled, checkBoard } = require('./utils')
-
-// v8 bits 一万次: global对象`` 1000ms  -> 数组+dict 250ms -> 去掉arr 236ms -> 取代splice 180ms
-// 只有一次随机 180ms -> 第二次添加随机 184ms -> shuffle 235ms
-function createEmpty () {
-  return [
-    ['', '', '', '', '', '', '', '', ''],
-    ['', '', '', '', '', '', '', '', ''],
-    ['', '', '', '', '', '', '', '', ''],
-    ['', '', '', '', '', '', '', '', ''],
-    ['', '', '', '', '', '', '', '', ''],
-    ['', '', '', '', '', '', '', '', ''],
-    ['', '', '', '', '', '', '', '', ''],
-    ['', '', '', '', '', '', '', '', ''],
-    ['', '', '', '', '', '', '', '', '']
-  ]
-}
-function testPure (fn, times) {
-  const start = new Date().getTime()
-  for (let i = 0; i < times; i++) {
-    fn()
-  }
-  const end = new Date().getTime()
-  console.log('用时', end - start)
-  return end - start
-}
+// v8 bits 一万次: global对象`` 1000ms  -> 数组+dict 250ms -> 去掉arr 236ms
+// 改写 splice 180ms -> 第二次添加随机 184ms
 
 function algorithm_v8 () {
   const matrix = createEmpty()
@@ -44,11 +21,9 @@ function algorithm_v8 () {
         for (let p = 0; p < 9; p++) {
           if (!(combined & (1 << p))) { backArr[k].push(p+1) }
         }
-        // 第一处
-        let r = (Math.random() * backArr[k].length) << 0
-        let a = backArr[k][r]
-        backArr[k][r] = backArr[k][backArr[k].length-1]
-        backArr[k].pop() // pop 176, length-- 241
+
+        backArr[k] = shuffleFisher(backArr[k])
+        let a = backArr[k].pop() 
 
         matrix[i][j] = a--
         rows[i] |= 1 << a
@@ -66,13 +41,9 @@ function algorithm_v8 () {
           matrix[i][j] = ''
         } while (backArr[k].length === 0)
 
-        // 第二处
-        // 之前 let c = backArr[k].pop()
 
-        let r = Math.floor(Math.random() * backArr[k].length)
-        let c = backArr[k][r]
-        backArr[k][r] = backArr[k][backArr[k].length-1]
-        backArr[k].pop()
+        // 第二处
+        let c = backArr[k].pop()
 
         matrix[i][j] = c--
         rows[i] |= 1 << c

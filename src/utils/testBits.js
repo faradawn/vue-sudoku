@@ -1,13 +1,8 @@
 const global = {
-  row1: null,
-  col5: null,
-  sqr01: null
+  row1: 0b11000,
+  col5: 0b00100,
+  sqr01: 0b00110
 }
-
-global['row1'] = 0b11000
-global['col5'] = 0b00100
-global['sqr01'] = 0b00110
-console.log('global', global)
 
 function setBits (i, j, global, a, action){
   a --
@@ -37,18 +32,18 @@ function pickAndPush (i, j, global, backArr) {
     let a = arr.splice(Math.floor(Math.random() * arr.length), 1)[0]
     a = 1
     backArr.push(arr);
-
-
-    setBits(i, j, global, a, 'add')
-    console.log('add', global)
-    setBits(i, j, global, 2, 'remove')
-    console.log('remove', global)
-
-    setBits(i, j, global, 2, 'add')
-    console.log('add', global)
     return a
   }
 }
 
-let backArr = []
-console.log('return a', pickAndPush(1, 5, global, backArr))
+
+
+
+function showBits(x){
+  let arr = []
+  for(let i = 8; i >= 0; i--){
+    arr[i] = x & 1
+    x = x >> 1
+  }
+  return arr
+}
