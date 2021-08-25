@@ -17,6 +17,6 @@ module.exports = {
     'camelcase': 'off',
     'quote-props': ['warn', 'consistent'],
     'prefer-const': 'warn',
-    'dot-notation': 'false',
+    'dot-notation': 'off'
   }
 }
