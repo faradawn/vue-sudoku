@@ -1,4 +1,4 @@
-const { createEmpty, createGlobal, shuffleFisher, isFilled, checkBoard, testPure } = require('./utils')
+const { isFilled, checkBoard} = require('./utils')
 
 /*
   v9 bits 一万次: 
@@ -10,12 +10,10 @@ const { createEmpty, createGlobal, shuffleFisher, isFilled, checkBoard, testPure
 
 
 function algorithm_v8 () {
-  const matrix = createEmpty()
+  const matrix = [[],[],[],[],[],[],[],[],[]]
   const backArr = []
   const rows = [], cols = [], sqrs = []
-  const dict = [0,0,0,1,1,1,2,2,2, 0,0,0,1,1,1,2,2,2, 0,0,0,1,1,1,2,2,2,
-  3,3,3,4,4,4,5,5,5, 3,3,3,4,4,4,5,5,5, 3,3,3,4,4,4,5,5,5,
-  6,6,6,7,7,7,8,8,8, 6,6,6,7,7,7,8,8,8, 6,6,6,7,7,7,8,8,8,]
+  const dict = [0,0,0,1,1,1,2,2,2, 0,0,0,1,1,1,2,2,2, 0,0,0,1,1,1,2,2,2, 3,3,3,4,4,4,5,5,5, 3,3,3,4,4,4,5,5,5, 3,3,3,4,4,4,5,5,5, 6,6,6,7,7,7,8,8,8, 6,6,6,7,7,7,8,8,8, 6,6,6,7,7,7,8,8,8,]
 
   let i = -1; let j = -1; let k = 0
 
@@ -64,5 +62,14 @@ function algorithm_v8 () {
   return matrix
 }
 
+testPure(algorithm_v8, 80000)
 
-testPure(algorithm_v8, 10000)
+function testPure (fn, times) {
+  const start = new Date().getTime()
+  for (let i = 0; i < times; i++) {
+    fn()
+  }
+  const end = new Date().getTime()
+  console.log('用时', end - start)
+  return end - start
+}

@@ -2,6 +2,7 @@ const { isFilled, checkBoard } = require('./utils')
 
 // bit dict 1075
 
+
 function algorithm_v8 () {
   const matrix = [[],[],[],[],[],[],[],[],[]]
   const backArr = []

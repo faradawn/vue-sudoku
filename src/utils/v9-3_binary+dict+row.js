@@ -1,7 +1,6 @@
 const { isFilled, checkBoard } = require('./utils')
 
-// dict only 1050
-// dict + row 1025 （提速20ms）
+// binary + dict + row, 1095
 
 function algorithm_v8 () {
   const matrix = [[],[],[],[],[],[],[],[],[]]
@@ -21,20 +20,18 @@ function algorithm_v8 () {
     while (++j < 9) {
       let combined = rows[i] | cols[j] | sqrs[dict[k]]      
       if(combined !== 511){
-        backArr[k] = []
+        let positions = []
         for (let p = 0; p < 9; p++) {
-          if (!(combined & (1 << p))) { backArr[k].push(p+1) }
+          if (!(combined & (1 << p))) { positions.push(p) }
         }
 
-        let r = (Math.random() * backArr[k].length) << 0
-        let a = backArr[k][r]
-        backArr[k][r] = backArr[k][backArr[k].length-1]
-        backArr[k].pop()
-        matrix[i][j] = a--
+        let a = positions[(Math.random() * positions.length) << 0]
+        backArr[k] = combined + bitDict[a]
+        matrix[i][j] = a + 1
 
         rows[i] += bitDict[a]
         cols[j] += bitDict[a]
-        sqrs[dict[k]] += bitDict[a] 
+        sqrs[dict[k]] += bitDict[a]
         k++
 
       } else {
@@ -42,30 +39,34 @@ function algorithm_v8 () {
           k-- 
           if (j === 0) { j = 8; i--; } else { j--; }
           let b = matrix[i][j] - 1
-          rows[i] -= bitDict[b]
+          rows[i] -= bitDict[b] 
           cols[j] -= bitDict[b]
           sqrs[dict[k]] -= bitDict[b]
-        } while (backArr[k].length === 0)
-
-        let c = backArr[k].pop()
-        matrix[i][j] = c--
-
-        rows[i] += bitDict[c]
-        cols[j] += bitDict[c]
-        sqrs[dict[k]] += bitDict[c]
+        } while (backArr[k] === 511 || undefined)
+        
+        let p = 0
+        for (; p < 9; p++) {
+          if (!(backArr[k] & (1 << p))) { break }
+        }
+        backArr[k] += bitDict[p]
+        matrix[i][j] = p + 1
+        
+        rows[i] += bitDict[p]
+        cols[j] += bitDict[p]
+        sqrs[dict[k]] += bitDict[p]
         k++
-
       }
     }
     j = -1
   }
-  if (!isFilled(matrix) || !checkBoard(matrix)) {
-    console.log('error', matrix)
-  }
+  // if (!isFilled(matrix) || !checkBoard(matrix)) {
+  //   console.log('error', matrix)
+  // }
   return matrix
 }
 
-testPure(algorithm_v8, 10000)
+
+testPure(algorithm_v8, 80000)
 
 function testPure (fn, times) {
   const start = new Date().getTime()
@@ -84,4 +85,3 @@ function shuffleFisher (arr) {
   }
   return arr
 }
-
