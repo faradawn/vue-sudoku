@@ -1,25 +1,16 @@
-const { createEmpty, createGlobal, shuffleFisher, isFilled, checkBoard, testPure } = require('./utils')
-
+const { isFilled, checkBoard } = require('./utils')
 // v8 bits 一万次: global对象`` 1000ms  -> 数组+dict 250ms -> 去掉arr 236ms
 // 改写 splice 180ms -> 第二次添加随机 184ms
-// 现在 180
+// 1213
+// 1182 -> 1130, 50ms 两处arrlen，独自快
 
 function algorithm_v8 () {
-  const matrix = createEmpty()  
+  const matrix = [[],[],[],[],[],[],[],[],[]]
   const backArr = []
   const rows = [], cols = [], sqrs = []
-  const dict = [0,0,0,1,1,1,2,2,2, 0,0,0,1,1,1,2,2,2,
-  3,3,3,4,4,4,5,5,5, 3,3,3,4,4,4,5,5,5, 3,3,3,4,4,4,5,5,5,
-  6,6,6,7,7,7,8,8,8, 6,6,6,7,7,7,8,8,8, 6,6,6,7,7,7,8,8,8,]
-  matrix[0] = shuffleFisher([1,2,3,4,5,6,7,8,9])
-  rows[0] = 511
-  for(let q = 0; q < 9; q++){
-    cols[q] = 1 << (matrix[0][q]-1)
-    sqrs[dict[q]] = 1 << (matrix[0][q]-1)
-  }
-  console.log('first', cols, sqrs, rows, matrix)
+  const dict = [0,0,0,1,1,1,2,2,2, 0,0,0,1,1,1,2,2,2, 0,0,0,1,1,1,2,2,2, 3,3,3,4,4,4,5,5,5, 3,3,3,4,4,4,5,5,5, 3,3,3,4,4,4,5,5,5,6,6,6,7,7,7,8,8,8, 6,6,6,7,7,7,8,8,8, 6,6,6,7,7,7,8,8,8,]
 
-  let i = 0; let j = -1; let k = 0
+  let i = -1; let j = -1; let k = 0
 
   while (++i < 9) {
     while (++j < 9) {
@@ -30,17 +21,17 @@ function algorithm_v8 () {
           if (!(combined & (1 << p))) { backArr[k].push(p+1) }
         }
 
-        let l = backArr[k].length
-        let r = (Math.random() * l) << 0
+        let r = (Math.random() * backArr[k].length) << 0
         let a = backArr[k][r]
-        backArr[k][r] = backArr[k][l-1]
+        backArr[k][r] = backArr[k][backArr[k].length-1]
         backArr[k].pop()
-
         matrix[i][j] = a--
+
         rows[i] |= 1 << a
         cols[j] |= 1 << a
         sqrs[dict[k]] |= 1 << a 
         k++
+
       } else {
         do {
           k-- 
@@ -49,14 +40,11 @@ function algorithm_v8 () {
           rows[i] &= ~(1 << b) 
           cols[j] &= ~(1 << b)
           sqrs[dict[k]] &= ~(1 << b)
-          matrix[i][j] = ''
         } while (backArr[k].length === 0)
 
-
-        // 第二处
         let c = backArr[k].pop()
-
         matrix[i][j] = c--
+
         rows[i] |= 1 << c
         cols[j] |= 1 << c
         sqrs[dict[k]] |= 1 << c
@@ -72,6 +60,15 @@ function algorithm_v8 () {
   return matrix
 }
 
+testPure(algorithm_v8, 80000)
 
-algorithm_v8()
-// testPure(algorithm_v8, 10000)
+function testPure (fn, times) {
+  const start = new Date().getTime()
+  for (let i = 0; i < times; i++) {
+    fn()
+  }
+  const end = new Date().getTime()
+  console.log('用时', end - start)
+  return end - start
+}
+
