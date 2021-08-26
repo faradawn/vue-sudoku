@@ -11,7 +11,8 @@ module.exports = {
   getAvailable,
   getAvailable_indexOf,
   testTime,
-  testPure
+  testPure,
+  getAvailable_new
 }
 function createGlobal () {
   obj = {
@@ -104,6 +105,33 @@ function getAvailable_indexOf (matrix, i, j) {
   }
   return ableArr
 }
+
+function getAvailable_new (matrix, i, j) {
+  const ableArr = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+  for (let a = 0; a < j; a++) { // 行
+    const p = ableArr.indexOf(matrix[i][a])
+    ableArr.splice(p, 1)
+  }
+  for (let b = 0; b < i; b++) { // 列
+    const p = ableArr.indexOf(matrix[b][j])
+    if (p !== -1) {
+      ableArr.splice(p, 1)
+    }
+  }
+  if (ableArr.length === 0) { // 提前终止
+    return []
+  }
+  for (let x = Math.floor(i / 3) * 3; x < i; x++) { // 宫格
+    for (let y = Math.floor(j / 3) * 3; y < Math.floor(j / 3) * 3 + 3; y++) {
+      const p = ableArr.indexOf(matrix[x][y])
+      if (p !== -1) {
+        ableArr.splice(p, 1)
+      }
+    }
+  }
+  return ableArr
+}
+
 
 /**
  * 检查棋盘是否填满

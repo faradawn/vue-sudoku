@@ -28,7 +28,7 @@
         <pre v-if="runtime[3] != 0">用时: {{runtime[3]}}s</pre>
       </div>
       <div class="button-line">
-        <button class="button" @click="testGenerate(5, 50)" >v5：最终优化</button>
+        <button class="button" @click="testGenerate(5, 50)" >v5：位算法</button>
         <pre v-if="runtime[4] != 0">用时: {{runtime[4]}}s</pre>
       </div>
     </div>

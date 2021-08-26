@@ -11,7 +11,8 @@ module.exports = {
   getAvailable,
   getAvailable_indexOf,
   testTime,
-  testPure
+  testPure,
+  createEmpty_new
 }
 function createGlobal () {
   obj = {
@@ -35,7 +36,16 @@ function testPure (fn, times) {
  * 创建空的二维数组
  * @returns
  */
-function createEmpty () {
+ function createEmpty () {
+  const board = Array.from(Array(9), () => new Array(9))
+  for (let i = 0; i < 9; i++) {
+    for (let j = 0; j < 9; j++) {
+      board[i][j] = ''
+    }
+  }
+  return board
+}
+function createEmpty_new () {
   return [
     ['', '', '', '', '', '', '', '', ''],
     ['', '', '', '', '', '', '', '', ''],
