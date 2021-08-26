@@ -1,15 +1,29 @@
-# Js小数独：四种棋盘生成法
+# Js小数独：五种棋盘生成法
+## Vue 版
 <p float="left">
-  <img src="/src/assets/screen-1.png" width="340" height="400" />
-  <img src="/src/assets/screen-2.png" width="400" height="400"/> 
+  <img src="/src/assets/screen-3.png" width="290" height="300" />
+  <img src="/src/assets/screen-4.png" width="300" height="300"/> 
 </p>
 
-## 生成测速 ⏱️（1000次挖50空）
+### 使用方法
+
+- 安装包裹 `yarn install`  
+- 启动 webpack `yarn dev`   
+- 在浏览器 `localhost:7000`  
+
+## HTML 版  
+<img src="/src/assets/screen-html.png" width="500" height="400"/> 
+
+### 使用方法
+- 双击打开 `./final-sudoku.html`
+
+
+## 生成测速 ⏱️（单次生成+挖空）
 - v1 随机法：140s
 - v2 平移法：0.06s
 - v3 三宫法：9.00s
 - v4 逐行法：0.90s
-- v5 最终优化：0.45;
+- v5 位算法：8万次 870ms
 
 ## 算法讲述 🧮
 ### v1: 随机法
@@ -56,10 +70,14 @@
 
 
 ## 谢谢阅读 ☘️
-制作时间三周，2021.7.19至2021.13；
-第一周Webpack和v1算法，第二周v2 v3 v4，第三周优化v5；  
-在大鹏老师，指导带领下完成；  
-欢迎任何订正或建议，  
+制作时间四周，2021.7.19至2021.8.26；
+在大鹏老师指导下完成！
+- 第一周Webpack和v1算法
+- 第二周v2 v3 v4
+- 第三周优化v5
+- 第四周v8位运算； 
+
+欢迎任何订正或建议，
 祝度过愉快的一天！  
 
 
