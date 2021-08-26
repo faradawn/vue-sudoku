@@ -28,7 +28,7 @@
         <pre v-if="runtime[3] != 0">用时: {{runtime[3]}}s</pre>
       </div>
       <div class="button-line">
-        <button class="button" @click="testGenerate(5, 50)" >v5：最终优化</button>
+        <button class="button" @click="testGenerate(5, 8000)" >v5：位算法</button>
         <pre v-if="runtime[4] != 0">用时: {{runtime[4]}}s</pre>
       </div>
     </div>
@@ -97,9 +97,6 @@ export default {
         case 4:
           this.matrix = createBoard_v4(num).matrix
           break
-        case 5:
-          this.matrix = createBoard_v5(num).matrix
-          break
         default:
           this.matrix = createBoard_v2(num).matrix
       }
@@ -130,10 +127,8 @@ export default {
         }
         this.runtime[3] = (runtime / 10).toFixed(2)
       } else if (version === 5) {
-        for (let i = 0; i < 9; i++) {
-          runtime += testTime(createBoard_v5, 50, times)
-        }
-        this.runtime[4] = (runtime / 10).toFixed(2)
+        // 执行8000次
+        this.runtime[4] = createBoard_v5(80000).time
       }
       this.createLevel(20, version)
     },

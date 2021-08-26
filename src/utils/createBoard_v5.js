@@ -1,42 +1,86 @@
-const { createEmpty_new, getAvailable_new, createHoles, shuffleFisher } = require('./utils')
 module.exports = {
   createBoard_v5
 }
-
+createBoard_v5(80000)
 /**
- * v5 最终优化
+ * v5 位运算+随机第一行
  */
 function createBoard_v5 (num) {
   const start = new Date().getTime()
-  const board = algorithm_v5()
-  createHoles(board, num)
+  for (let i = 0; i < num; i++) {
+    algorithm_v9_3()
+  }
   const end = new Date().getTime()
+  const board = algorithm_v9_3()
+  console.log(`v5位算法${num}次用时`, end - start)
   return { matrix: board, time: end - start }
 }
 
-// v5 裸函数: 一万次 1.0 秒左右
-function algorithm_v5 () {
-  const matrix = createEmpty_new()
+function algorithm_v9_3 () {
+  const matrix = [[], [], [], [], [], [], [], [], []]
   const backArr = []
-  let i = -1; let j = -1; let k = 0
+  const dict = [0, 0, 0, 1, 1, 1, 2, 2, 2, 0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 3, 3, 3, 4, 4, 4, 5, 5, 5, 3, 3, 3, 4, 4, 4, 5, 5, 5, 6, 6, 6, 7, 7, 7, 8, 8, 8, 6, 6, 6, 7, 7, 7, 8, 8, 8, 6, 6, 6, 7, 7, 7, 8, 8, 8]
+  const bitDict = [1, 2, 4, 8, 16, 32, 64, 128, 256]
+
+  matrix[0] = shuffleFisher([1, 2, 3, 4, 5, 6, 7, 8, 9])
+
+  const rows = [511, 0, 0, 0, 0, 0, 0, 0, 0]
+  const cols = [bitDict[matrix[0][0] - 1], bitDict[matrix[0][1] - 1], bitDict[matrix[0][2] - 1], bitDict[matrix[0][3] - 1], bitDict[matrix[0][4] - 1], bitDict[matrix[0][5] - 1], bitDict[matrix[0][6] - 1], bitDict[matrix[0][7] - 1], bitDict[matrix[0][8] - 1]]
+  const sqrs = [bitDict[matrix[0][0] - 1] + bitDict[matrix[0][1] - 1] + bitDict[matrix[0][2] - 1], bitDict[matrix[0][3] - 1] + bitDict[matrix[0][4] - 1] + bitDict[matrix[0][5] - 1], bitDict[matrix[0][6] - 1] + bitDict[matrix[0][7] - 1] + bitDict[matrix[0][8] - 1], 0, 0, 0, 0, 0, 0]
+
+  let i = 0; let j = -1; let k = 0
+
   while (++i < 9) {
     while (++j < 9) {
-      const ableArr = shuffleFisher(getAvailable_new(matrix, i, j))
-      if (ableArr.length > 0) {
-        matrix[i][j] = ableArr.pop()
-        backArr[k] = ableArr
+      const combined = rows[i] | cols[j] | sqrs[dict[k]]
+      if (combined !== 511) {
+        const positions = []
+        for (let p = 0; p < 9; p++) {
+          if (!(combined & (1 << p))) { positions.push(p) }
+        }
+
+        const a = positions[(Math.random() * positions.length) << 0]
+        backArr[k] = combined + bitDict[a]
+        matrix[i][j] = a + 1
+
+        rows[i] += bitDict[a]
+        cols[j] += bitDict[a]
+        sqrs[dict[k]] += bitDict[a]
         k++
       } else {
         do {
-          if (j === 0) { j = 8; i-- } else { j-- }
           k--
-          matrix[i][j] = ''
-        } while (backArr[k].length === 0)
-        matrix[i][j] = backArr[k].pop()
+          if (j === 0) { j = 8; i-- } else { j-- }
+          const b = matrix[i][j] - 1
+          rows[i] -= bitDict[b]
+          cols[j] -= bitDict[b]
+          sqrs[dict[k]] -= bitDict[b]
+        // eslint-disable-next-line no-unmodified-loop-condition
+        } while (backArr[k] === 511 || undefined)
+
+        let p = 0
+        for (; p < 9; p++) {
+          if (!(backArr[k] & (1 << p))) { break }
+        }
+        backArr[k] += bitDict[p]
+        matrix[i][j] = p + 1
+
+        rows[i] += bitDict[p]
+        cols[j] += bitDict[p]
+        sqrs[dict[k]] += bitDict[p]
         k++
       }
     }
     j = -1
   }
   return matrix
+}
+
+function shuffleFisher (arr) {
+  let i = arr.length
+  while (i > 0) {
+    const r = Math.floor(Math.random() * i--);
+    [arr[i], arr[r]] = [arr[r], arr[i]]
+  }
+  return arr
 }
