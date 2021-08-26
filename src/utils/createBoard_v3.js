@@ -1,4 +1,4 @@
-const { createEmpty, createHoles, fillFirstThree, getAvailable } = require('./utils')
+const { createEmpty, fillFirstThree, getAvailable } = require('./utils')
 
 module.exports = {
   createBoard_v3
@@ -7,10 +7,9 @@ module.exports = {
 /**
  * v3 三宫法
  */
-function createBoard_v3 (num) {
+function createBoard_v3 () {
   const start = new Date().getTime()
   const board = algorithm_v3()
-  createHoles(board, num)
   const end = new Date().getTime()
   return { matrix: board, time: end - start }
 }

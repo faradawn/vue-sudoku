@@ -1,18 +1,18 @@
 const { createEmpty, createHoles, shuffleFisher } = require('./utils')
 
 module.exports = {
-  createBoard_v2
+  createWithHoles
 }
 
 /**
- * 用平移法创建棋盘，输出matrix和time
+ * 用平移v2创建棋盘并挖空
+ * @param {number} num
  * @returns
  */
-function createBoard_v2 () {
-  const start = new Date().getTime()
+function createWithHoles (num) {
   const board = createParallex()
-  const end = new Date().getTime()
-  return { matrix: board, time: end - start }
+  createHoles(board, num)
+  return board
 }
 /**
  * 平移法生成棋盘

@@ -233,10 +233,11 @@ function fillFirstThree (matrix) {
  * @param {numer} times 跑多少次
  * @returns
  */
-function testTime (fn, num, times) {
+function testTime (fn, times) {
   let sum = 0
   for (let i = 0; i < times; i++) {
-    sum += fn(num).time
+    sum += fn().time
   }
-  return sum / times
+  console.log('用时', sum)
+  return sum
 }

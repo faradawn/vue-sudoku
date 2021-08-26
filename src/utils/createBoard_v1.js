@@ -1,4 +1,4 @@
-const { createHoles, createEmpty, fillFirstThree, isFilled, getAvailable } = require('./utils')
+const { createEmpty, fillFirstThree, isFilled, getAvailable } = require('./utils')
 
 module.exports = {
   createBoard_v1
@@ -9,12 +9,11 @@ module.exports = {
  * @param {number} num 挖空数量
  * @returns
  */
-function createBoard_v1 (num) {
+function createBoard_v1 () {
   const start = new Date().getTime()
   let board = createEmpty()
   fillFirstThree(board)
   board = fillRest(board)
-  createHoles(board, num)
   const end = new Date().getTime()
   return { matrix: board, time: end - start }
 }

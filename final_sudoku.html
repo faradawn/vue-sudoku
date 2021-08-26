@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>v9数独游戏</title>
+  <title>小数独</title>
 
   <script type="text/javascript">
 
@@ -67,7 +67,7 @@
       fn()
     }
     const end = new Date().getTime()
-    console.log('8万次用时', end - start)
+    console.log('用时', end - start)
     return end - start
   }
 
@@ -77,11 +77,12 @@
     const end = new Date().getTime()
     let time = end - start
     console.log('用时', time)
-    setBoard(algorithm_v8())
+    setBoard()
     document.getElementById("result").innerHTML = '8万次用时 ' + String(time) + 'ms'
   }
 
-  function setBoard(num){
+  function setBoard(){
+    const num = algorithm_v8()
     var location = new Array(9);
     var i,j,row,col;
     for(i = 0; i < 9; i++)
@@ -137,11 +138,10 @@
         }
     </style>
 </head>
-<body onload="testTime()">
-  <h2 align="center">v9 数独游戏</h2>
+<body onload="setBoard()">
+  <h2 align="center">小数独: v5 位算法</h2>
   <div class="main">
-
-    <button onclick="testTime()">生成棋盘</button>
+    <button onclick="testTime()">测速8万次</button>
     <pre style="margin-left: 10px;" id="result"></pre>
   </div>
 

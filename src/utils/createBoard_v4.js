@@ -1,4 +1,4 @@
-const { createEmpty, createHoles, getAvailable } = require('./utils')
+const { createEmpty, getAvailable } = require('./utils')
 module.exports = {
   createBoard_v4
 }
@@ -6,10 +6,9 @@ module.exports = {
 /**
  * v4 原始行列法
  */
-function createBoard_v4 (num) {
+function createBoard_v4 () {
   const start = new Date().getTime()
   const board = algorithm_v4()
-  createHoles(board, num)
   const end = new Date().getTime()
   return { matrix: board, time: end - start }
 }

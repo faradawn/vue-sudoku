@@ -1,35 +1,40 @@
 <template>
   <div class="main">
-    <h2>小数独：四种棋盘生成算法</h2>
-    <p>生成棋盘</p>
+    <h2>小数独：五种棋盘生成算法</h2>
+    <h3>生成棋盘</h3>
     <div class="button-line">
-      <button class="button" @click="createLevel(20,2)">简单</button>
-      <button class="button" @click="createLevel(30,2)">普通</button>
-      <button class="button" @click="createLevel(40,2)">困难</button>
+      <button class="button" @click="createLevel(20)">简单</button>
+      <button class="button" @click="createLevel(30)">普通</button>
+      <button class="button" @click="createLevel(40)">困难</button>
       <button class="button" @click="emptyBoard">清空</button>
     </div>
 
     <div>
-      <p>算法测速</p>
+      <h3>算法测速</h3>
+      <div class="row">
+        <input class="inputTimes" type="number" placeholder="请输入执行次数" v-model="times">
+        <pre> {{message}}</pre>
+      </div>
+
       <div class="button-line">
-        <button class="button" @click="testGenerate(1, 5)" >v1：随机法</button>
-        <pre v-if="runtime[0] != 0">用时: {{runtime[0]}}s</pre>
+        <button class="button" @click="testGenerate(1)" >v1：随机法</button>
+        <pre v-if="runtime[0] != -1">用时: {{runtime[0]}}ms</pre>
       </div>
       <div class="button-line">
-        <button class="button" @click="testGenerate(2, 50)" >v2：平移法</button>
-        <pre v-if="runtime[1] != 0">用时: {{runtime[1]}}s</pre>
+        <button class="button" @click="testGenerate(2)" >v2：平移法</button>
+        <pre v-if="runtime[1] != -1">用时: {{runtime[1]}}ms</pre>
       </div>
       <div class="button-line">
-        <button class="button" @click="testGenerate(3, 50)" >v3：三宫法</button>
-        <pre v-if="runtime[2] != 0">用时: {{runtime[2]}}s</pre>
+        <button class="button" @click="testGenerate(3)" >v3：三宫法</button>
+        <pre v-if="runtime[2] != -1">用时: {{runtime[2]}}ms</pre>
       </div>
       <div class="button-line">
-        <button class="button" @click="testGenerate(4, 50)" >v4：逐行法</button>
-        <pre v-if="runtime[3] != 0">用时: {{runtime[3]}}s</pre>
+        <button class="button" @click="testGenerate(4)" >v4：逐行法</button>
+        <pre v-if="runtime[3] != -1">用时: {{runtime[3]}}ms</pre>
       </div>
       <div class="button-line">
-        <button class="button" @click="testGenerate(5, 8000)" >v5：位算法</button>
-        <pre v-if="runtime[4] != 0">用时: {{runtime[4]}}s</pre>
+        <button class="button" @click="testGenerate(5)" >v5：位算法</button>
+        <pre v-if="runtime[4] != -1">用时: {{runtime[4]}}ms</pre>
       </div>
     </div>
 
@@ -66,6 +71,7 @@ const { createBoard_v2 } = require('../utils/createBoard_v2')
 const { createBoard_v3 } = require('../utils/createBoard_v3')
 const { createBoard_v4 } = require('../utils/createBoard_v4')
 const { createBoard_v5 } = require('../utils/createBoard_v5')
+const { createWithHoles } = require('../utils/createWithHoles')
 const { createEmpty, testTime } = require('../utils/utils')
 
 export default {
@@ -73,7 +79,9 @@ export default {
     return {
       matrix: [[]],
       inputArr: [],
-      runtime: [0, 0, 0, 0, 0]
+      runtime: [-1, -1, -1, -1, -1],
+      times: null,
+      message: ''
     }
   },
   mounted () {
@@ -83,54 +91,45 @@ export default {
     emptyBoard () {
       this.matrix = createEmpty()
       this.inputArr = []
-      this.runtime = [0, 0, 0, 0, 0]
+      this.times = null
+      this.runtime = [-1, -1, -1, -1, -1]
     },
-    createLevel (num, version) {
+    createLevel (num) {
       this.inputArr = []
+      this.matrix = createWithHoles(num)
+    },
+    testGenerate (version) {
+      let times = 1
+      if (this.times) { times = this.times }
       switch (version) {
         case 1:
-          this.matrix = createBoard_v1(num).matrix
+          if (times > 20) {
+            alert('v1 执行次数超过20次，若时间过长可刷新页面')
+          }
+          this.runtime[0] = testTime(createBoard_v1, times)
+          this.matrix = createBoard_v1().matrix
+          break
+        case 2:
+          this.runtime[1] = testTime(createBoard_v2, times)
+          this.matrix = createBoard_v2().matrix
           break
         case 3:
-          this.matrix = createBoard_v3(num).matrix
+          if (times > 500) {
+            alert('v3 执行次数超过500次，若时间过长可刷新页面')
+          }
+          this.runtime[2] = testTime(createBoard_v3, times)
+          this.matrix = createBoard_v3().matrix
           break
         case 4:
-          this.matrix = createBoard_v4(num).matrix
+          this.runtime[3] = testTime(createBoard_v4, times)
+          this.matrix = createBoard_v4().matrix
+          break
+        case 5:
+          this.runtime[4] = testTime(createBoard_v5, times)
+          this.matrix = createBoard_v5().matrix
           break
         default:
-          this.matrix = createBoard_v2(num).matrix
       }
-    },
-    testGenerate (version, times) {
-      console.log(version === 1
-        ? `v${version}开始执行${times * 5}次`
-        : `v${version}开始执行${times * 10}次`)
-      let runtime = 0
-      if (version === 1) {
-        for (let i = 0; i < 4; i++) {
-          runtime += testTime(createBoard_v1, 50, times)
-        }
-        this.runtime[0] = (runtime / 5).toFixed(2)
-      } else if (version === 2) {
-        for (let i = 0; i < 9; i++) {
-          runtime += testTime(createBoard_v2, 50, times)
-        }
-        this.runtime[1] = (runtime / 10).toFixed(2)
-      } else if (version === 3) {
-        for (let i = 0; i < 9; i++) {
-          runtime += testTime(createBoard_v3, 50, times)
-        }
-        this.runtime[2] = (runtime / 10).toFixed(2)
-      } else if (version === 4) {
-        for (let i = 0; i < 9; i++) {
-          runtime += testTime(createBoard_v4, 50, times)
-        }
-        this.runtime[3] = (runtime / 10).toFixed(2)
-      } else if (version === 5) {
-        // 执行8000次
-        this.runtime[4] = createBoard_v5(80000).time
-      }
-      this.createLevel(20, version)
     },
     addInput (e) {
       console.log(e.target.value)
@@ -152,8 +151,29 @@ export default {
 </script>
 
 <style scoped>
+h2{
+  margin-bottom: 0px;
+}
+h3{
+  margin: 0;
+  margin-top: 15px;
+  margin-bottom: 10px;
+}
+pre{
+  margin: 0
+}
+.row{
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  margin-bottom: 5px
+
+}
 .main{
   padding: 0 20px;
+}
+.inputTimes{
+  margin-bottom: 15px;
 }
 .inputBox {
   width: 1rem;

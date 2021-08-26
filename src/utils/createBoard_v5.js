@@ -1,18 +1,14 @@
 module.exports = {
   createBoard_v5
 }
-createBoard_v5(80000)
 /**
  * v5 位运算+随机第一行
  */
-function createBoard_v5 (num) {
+function createBoard_v5 () {
   const start = new Date().getTime()
-  for (let i = 0; i < num; i++) {
-    algorithm_v9_3()
-  }
+  algorithm_v9_3()
   const end = new Date().getTime()
   const board = algorithm_v9_3()
-  console.log(`v5位算法${num}次用时`, end - start)
   return { matrix: board, time: end - start }
 }
 
